@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+  {% block content %}
+    {% for each_ad in ad_list %}
+    <span class="card custom-card" style="width: 18rem;">
+      <div class= "header" id="{{ each_ad.source_name }}"> Взето от: {{ each_ad.taken_from }}
+      </div>
+      <img src="{{ each_ad.image }}" class="card-img-top" alt="test">
+      <div class="card-body">
+        <h5 class="card-title">{{ each_ad.title }}</h5>
+        <p class="card-text">
+        <b>Тип на имота</b>: {{ each_ad.home_type }}  <br>
+        <b>Площ</b>: {{ each_ad.home_size }} кв.м<br>
+        <b>Квартал</b>: {{ each_ad.location }}  <br>
+        <b>Цена</b>: €{{ "{:,}".format(each_ad.price) }}  <br>
+        <b>Дата на вземане</b>: {{ each_ad.scraping_date }}
+        </p>
+        <a href="{{ each_ad.url }}" class="btn btn-primary">Към страницата на обявата</a>
+      </div>
+    </span>
+    {% endfor %}
+  {% endblock %}
+
+

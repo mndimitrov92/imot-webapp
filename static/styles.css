@@ -1,0 +1,169 @@
+.container {
+    padding-top: 2rem;
+    /* max-width: 2000px; */
+}
+
+.card.custom-card {
+    display: inline-block !important;
+    margin: .2rem;
+    opacity: .6;
+    background-color: #222222;
+    color: white;
+    border-radius: 3%;
+}
+
+.card:hover{
+    opacity: 1;
+}
+
+.header {
+    text-align: center;
+}
+
+
+/* Login form */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: linear-gradient(to right, #b92b27, #1565c0)
+}
+
+.card {
+    margin-bottom: 20px;
+    border: none
+}
+
+.box {
+    width: 500px;
+    padding: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background: #191919;
+    ;
+    text-align: center;
+    transition: 0.25s;
+    margin-top: 100px
+}
+
+.box input[type="text"],
+.box input[type="password"] {
+    border: 0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #3498db;
+    padding: 10px 10px;
+    width: 250px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s
+}
+
+.box h1 {
+    color: white;
+    text-transform: uppercase;
+    font-weight: 500
+}
+
+.box input[type="text"]:focus,
+.box input[type="password"]:focus {
+    width: 300px;
+    border-color: #2ecc71
+}
+
+.box input[type="submit"] {
+    border: 0;
+    background: none;
+    display: block;
+    margin: 20px auto;
+    text-align: center;
+    border: 2px solid #2ecc71;
+    padding: 14px 40px;
+    outline: none;
+    color: white;
+    border-radius: 24px;
+    transition: 0.25s;
+    cursor: pointer
+}
+
+.box input[type="submit"]:hover {
+    background: #2ecc71
+}
+
+.forgot {
+    text-decoration: underline
+}
+
+
+/* Custom backgrounds for the different websites */
+#imotbg {
+    background-color: darkblue;
+}
+
+#address {
+    background-color: darkorchid;
+}
+
+#galardo {
+    background-color: darkred;
+}
+
+#home2u {
+    background-color: darkslategrey;
+}
+
+#mirelabg {
+    background-color: darkviolet;
+}
+
+#novdom1 {
+    background-color: deeppink;
+}
+
+#primoplus {
+    background-color: forestgreen;
+}
+
+#superimoti {
+    background-color: goldenrod;
+}
+
+#ues {
+    background-color: indigo;
+}
+
+#yavlena {
+    background-color: lightcoral;
+}
+
+#era {
+    background-color: darkorange;
+}
+
+#avista {
+    background-color: darkturquoise;
+}
+
+#yourhome {
+    background-color: dodgerblue;
+}
+
+#arcoreal {
+    background-color: firebrick;
+}
+
+#place2live {
+    background-color: fuchsia;
+}
+
+#bulgarianproperties {
+    background-color: rgb(64, 7, 7);
+}
+
+#luximmo {
+    background-color: rgb(65, 121, 148);
+}
