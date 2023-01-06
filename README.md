@@ -6,3 +6,7 @@ The data population part is handled in a separate repo.
 2) Activate environment
 3) Install dependancies: ``` pip install -r depencencies.txt ```
 4) Run the app: ``` python app.py ```
+
+# Any new crawlers added in the data collection layer must also include their corresponding:
+        1) css specifics that will be used in the templates (styles.css)
+        2) constants file definition
