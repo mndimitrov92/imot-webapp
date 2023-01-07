@@ -35,8 +35,9 @@ def create_table(conn):
 	url TEXT NOT NULL,
 	price INTEGER NOT NULL,
 	home_type TEXT NOT NULL,
-	home_size TEXT NOT NULL,
+	home_size INTEGER NOT NULL,
     location TEXT NOT NULL,
+    location_orig TEXT NOT NULL,
     image TEXT NOT NULL,
     scraping_date TEXT NOT NULL,
     taken_from TEXT NOT NULL
@@ -75,6 +76,7 @@ def show(conn):
 if __name__ == "__main__":
     conn = create_connection(DATABASE)
     ENTRIES = [
+        # TODO Remove title from input, will be using id
         # Imot bg
         ("My title 1", "imotbg", "https://imot.bg/1", 50000, "Dvistaen", 56, "Suhata reka",
          "https://www.treidplas.bg/wp-content/uploads/2014/06/default-placeholder.png", "27-04-2022", "imot.bg"),

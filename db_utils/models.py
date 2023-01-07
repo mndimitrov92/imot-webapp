@@ -12,7 +12,6 @@ class Ads(Base):
     __tablename__ = "ads"
 
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, unique=False, index=True)
     source_name = Column(String, unique=False, index=True)
     url = Column(String, unique=False, index=True)
     price = Column(Integer, unique=False, index=True)
@@ -32,7 +31,6 @@ class NewAds(Base):
     """
     __tablename__ = "new_ads"
     id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, unique=False, index=True)
     source_name = Column(String, unique=False, index=True)
     url = Column(String, unique=False, index=True)
     price = Column(Integer, unique=False, index=True)
