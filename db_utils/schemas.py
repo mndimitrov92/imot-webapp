@@ -6,10 +6,10 @@ from pydantic import BaseModel
 
 class Ads(BaseModel):
     """
-    Pydantic model for the ads test table 
+    Pydantic model for the ads table.
     """
 
-    id : int
+    id: int
     title: str
     source_name: str
     url: str
@@ -17,6 +17,7 @@ class Ads(BaseModel):
     home_type: str
     home_size: int
     location: str
+    # location_orig: str
     image: str
     scraping_date: str
     taken_from: str
@@ -29,4 +30,32 @@ class Ads(BaseModel):
     class Config:
         orm_mode = True
 
-# TODO: Populate with the schemas for the each table
+
+class NewAds(BaseModel):
+    """
+    Pydantic model for the new ads table.
+    """
+
+
+class Summary(BaseModel):
+    """
+    Pydantic model for the summary table.
+    """
+    id: int
+    addressbg: int
+    arcoreal: int
+    avista: int
+    bulgarianproperties: int
+    era: int
+    galardo: int
+    home2u: int
+    imotbg: int
+    luximmo: int
+    mirelabg: int
+    novdom1: int
+    place2live: int
+    primoplus: int
+    superimoti: int
+    ues: int
+    yavlena: int
+    yourhome: int
