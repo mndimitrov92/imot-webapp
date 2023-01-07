@@ -47,17 +47,33 @@ async def read_homepage(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/new-ads", response_class=HTMLResponse)
-async def read_new_ads(request: Request):
-    """
-    It returns a response object that renders the ads.html template with the request object as a context
-    variable
+def _read_ads(request, source_name, price, location, limit, db, only_new_ads=False):
+    # my_ads is a list of Ads objects. The attributes are the db columns
+    if any([param for param in [source_name, price, location] if param is not None]):
+        my_ads = crud.get_filtered_ads(db,
+                                       source_name=source_name,
+                                       price=price,
+                                       location=location,
+                                       limit=limit,
+                                       only_new_ads=only_new_ads)
+    else:
+        my_ads = crud.get_ordered_ads(
+            db, limit=limit, only_new_ads=only_new_ads)
+    return templates.TemplateResponse("ads.html", {"request": request, "ad_list": my_ads})
 
-    :param request: The request object
-    :type request: Request
-    :return: a TemplateResponse object.
+
+@app.get("/new-ads", response_class=HTMLResponse, response_model=List[schemas.NewAds])
+async def read_new_ads(request: Request,
+                       source_name: Optional[constants.AdSource] = None,
+                       price: Optional[int] = Query(None, ge=1),
+                       location: Optional[constants.AdLocation] = None,
+                       limit: Optional[int] = Query(None, ge=1, le=100),
+                       db: Session = Depends(get_db),
+                       ):
     """
-    return templates.TemplateResponse("ads.html", {"request": request})
+    Dispay function for all collected new ads with support for filters based on a set of price, location, source.
+    """
+    return _read_ads(request, source_name, price, location, limit, db)  # @TODO: Add the only new ads param when the db tables are updated
 
 
 @app.get("/all-ads", response_class=HTMLResponse, response_model=List[schemas.Ads])
@@ -71,16 +87,7 @@ async def read_all_ads(request: Request,
     """
     Dispay function for all collected ads with support for filters based on a set of price, location, source.
     """
-    # my_ads is a list of Ads objects. The attributes are the db columns
-    if any([param for param in [source_name, price, location] if param is not None]):
-        my_ads = crud.get_filtered_ads(db,
-                                       source_name=source_name,
-                                       price=price,
-                                       location=location,
-                                       limit=limit)
-    else:
-        my_ads = crud.get_ordered_ads(db, limit=limit)
-    return templates.TemplateResponse("ads.html", {"request": request, "ad_list": my_ads})
+    return _read_ads(request, source_name, price, location, limit, db)
 
 
 @app.get("/data", response_class=HTMLResponse)
