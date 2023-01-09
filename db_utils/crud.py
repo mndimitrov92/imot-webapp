@@ -53,6 +53,7 @@ def get_ordered_ads(db: Session, limit: int = 100, only_new_ads: bool = False):
     only_new_ads: Flag to indicate whether all ads will be displayed or only the new ones
     """
     model_ads = models.NewAds if only_new_ads else models.Ads
-    order_precedence = ("price", "location", "home_size", "source_name", "home_type")
+    order_precedence = ("price", "location", "home_size",
+                        "source_name", "home_type")
     output = db.query(model_ads)
     return output.order_by(*order_precedence).limit(limit).all()
