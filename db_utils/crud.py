@@ -14,7 +14,7 @@ def get_filtered_ads(db: Session,
                      limit: int = 100,
                      only_new_ads: bool = False):
     """
-    Retrive all ads based on the filters passed.
+    Retrieve all ads based on the filters passed.
     Params:
     db: the database session
     source_name(Optional): The name of which the ad list will be filtered by:
@@ -23,6 +23,7 @@ def get_filtered_ads(db: Session,
 
     location(Optional): The location of which the ad list will be filtered by
     home_size(Optional): The home_size more than which the ad list will be filtered by
+    home_type(Optional): The home type of which the ad list will be filtered by
     limit(Optional): The amount of entries to be shown
     only_new_ads: Flag to indicate whether all ads will be displayed or only the new ones
     """
@@ -46,7 +47,7 @@ def get_filtered_ads(db: Session,
 
 def get_ordered_ads(db: Session, limit: int = 100, only_new_ads: bool = False):
     """
-    Retrive all ads ordered by price - location - source_name.
+    Retrieve all ads ordered by price - location - home-size - source_name - home-type.
     Params:
     db: the database session
     limit(Optional): The amount of entries to be shown
