@@ -35,6 +35,19 @@ class AdSource(enum.Enum):
     YOURHOME = "yourhome"
 
 
+class HomeType(enum.Enum):
+    """
+    Enumeration class that provides the allowed home types.
+    The API will use them for the input validations.
+    """
+    EDNOSTAEN = "Едностаен"
+    DVISTAEN = "Двустаен"
+    TRISTAEN = "Тристаен"
+    MNOGOSTAEN = "Многостаен"
+    STUDIO = "Студио"
+    MEZONET = "Мезонет"
+
+
 class AdLocation(enum.Enum):
     """
     Enumeration class that provides the allowed location names.

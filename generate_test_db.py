@@ -80,10 +80,10 @@ def get_current_date() -> str:
 
 def get_home_type():
     """
-    It returns a random choice from the list ["Едностаен", "Двустаен", "Тристаен"]
-    :return: A random choice from the list.
+    It returns a random value from the list of values in the HomeType enum
+    :return: A random value from the list of values in the HomeType enum.
     """
-    return random.choice(["Едностаен", "Двустаен", "Тристаен"])
+    return random.choice([home.value for home in list(utils.constants.HomeType)])
 
 
 def build_data_entry():

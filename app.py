@@ -47,18 +47,20 @@ async def read_homepage(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-def _read_ads(request, source_name, price, location, limit, db, only_new_ads=False):
+def _read_ads(request, source_name, price, location, home_size, home_type, limit, db, only_new_ads=False):
     # my_ads is a list of Ads objects. The attributes are the db columns
-    if any([param for param in [source_name, price, location] if param is not None]):
-        my_ads = crud.get_filtered_ads(db,
+    if any([param for param in [source_name, price, home_size, home_type, location] if param is not None]):
+        my_ads = crud.get_filtered_ads(db=db,
                                        source_name=source_name,
                                        price=price,
                                        location=location,
+                                       home_size=home_size,
+                                       home_type=home_type,
                                        limit=limit,
                                        only_new_ads=only_new_ads)
     else:
         my_ads = crud.get_ordered_ads(
-            db, limit=limit, only_new_ads=only_new_ads)
+            db=db, limit=limit, only_new_ads=only_new_ads)
     return templates.TemplateResponse("ads.html", {"request": request, "ad_list": my_ads})
 
 
@@ -67,13 +69,23 @@ async def read_new_ads(request: Request,
                        source_name: Optional[constants.AdSource] = None,
                        price: Optional[int] = Query(None, ge=1),
                        location: Optional[constants.AdLocation] = None,
+                       home_size: Optional[int] = Query(None, ge=1),
+                       home_type: Optional[constants.HomeType] = None,
                        limit: Optional[int] = Query(None, ge=1, le=100),
                        db: Session = Depends(get_db),
                        ):
     """
-    Dispay function for all collected new ads with support for filters based on a set of price, location, source.
+    Dispay function for all collected new ads with support for filters based on a set of price, location, source, 
+    home_size, home_type.
     """
-    return _read_ads(request, source_name, price, location, limit, db, only_new_ads=True)
+    return _read_ads(request=request,
+                     source_name=source_name,
+                     price=price, location=location,
+                     home_size=home_size,
+                     home_type=home_type,
+                     limit=limit,
+                     db=db,
+                     only_new_ads=True)
 
 
 @app.get("/all-ads", response_class=HTMLResponse, response_model=List[schemas.Ads])
@@ -81,13 +93,23 @@ async def read_all_ads(request: Request,
                        source_name: Optional[constants.AdSource] = None,
                        price: Optional[int] = Query(None, ge=1),
                        location: Optional[constants.AdLocation] = None,
+                       home_size: Optional[int] = Query(None, ge=1),
+                       home_type: Optional[constants.HomeType] = None,
                        limit: Optional[int] = Query(None, ge=1, le=100),
                        db: Session = Depends(get_db),
                        ):
     """
-    Dispay function for all collected ads with support for filters based on a set of price, location, source.
+    Dispay function for all collected ads with support for filters based on a set of price, location, source,
+    home_size, home_type.
     """
-    return _read_ads(request, source_name, price, location, limit, db)
+    return _read_ads(request=request,
+                     source_name=source_name,
+                     price=price,
+                     location=location,
+                     home_size=home_size,
+                     home_type=home_type,
+                     limit=limit,
+                     db=db)
 
 
 @app.get("/data", response_class=HTMLResponse)
