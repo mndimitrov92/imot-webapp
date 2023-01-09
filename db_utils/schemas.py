@@ -17,7 +17,6 @@ class Ads(BaseModel):
     home_type: str
     home_size: int
     location: str
-    # location_orig: str
     image: str
     scraping_date: str
     taken_from: str

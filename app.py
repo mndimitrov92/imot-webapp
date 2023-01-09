@@ -73,7 +73,7 @@ async def read_new_ads(request: Request,
     """
     Dispay function for all collected new ads with support for filters based on a set of price, location, source.
     """
-    return _read_ads(request, source_name, price, location, limit, db)  # @TODO: Add the only new ads param when the db tables are updated
+    return _read_ads(request, source_name, price, location, limit, db, only_new_ads=True)
 
 
 @app.get("/all-ads", response_class=HTMLResponse, response_model=List[schemas.Ads])

@@ -17,9 +17,7 @@ class Ads(Base):
     price = Column(Integer, unique=False, index=True)
     home_type = Column(String, unique=False, index=True)
     home_size = Column(Integer, unique=False, index=True)
-    # The first location will be converted to english variant so it can be used for filters
     location = Column(String, unique=False, index=True)
-    # location_orig = Column(String, unique=False, index=True)
     image = Column(String, unique=False, index=True)
     scraping_date = Column(String, unique=False, index=True)
     taken_from = Column(String, unique=False, index=True)
@@ -36,9 +34,7 @@ class NewAds(Base):
     price = Column(Integer, unique=False, index=True)
     home_type = Column(String, unique=False, index=True)
     home_size = Column(Integer, unique=False, index=True)
-    # The first location will be converted to english variant so it can be used for filters
     location = Column(String, unique=False, index=True)
-    # location_orig = Column(String, unique=False, index=True)
     image = Column(String, unique=False, index=True)
     scraping_date = Column(String, unique=False, index=True)
     taken_from = Column(String, unique=False, index=True)
