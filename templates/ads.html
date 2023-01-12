@@ -1,31 +1,37 @@
 {% extends "base.html" %}
 
   {% block content %}
-    <div class="summary-container">
-      <form action="" method="get">
-        <div>
-          <label for="location_id">Списък с квартали: </label>
-          <input type="text" id="location_id" placeholder="Редута, Сухата река..."></input>
-        </div>
-        <div>
-          <label for="source_id">Списък от източници: </label>
-          <input type="text" id="source_id" placeholder="Ex:imotbg, era, yavlena..."></input>
-        </div>
-        <div>
-          <label for="home_type_id">Списък от типове апартаменти: </label>
-          <input type="text" id="home_type_id" placeholder="Едностаен, Двустаен..."></input>
-        </div>
-        <div>
-          <label for="price_id">Цена по ниска от: </label>
-          <input type="number" id="price_id"></input>
-        </div>
-        <div>
-          <label for="size_id">Квадратура повече от: </label>
-          <input type="number" id="size_id"></input>
-        </div>
-        <input type="submit" value="Filter">
-        <input type="submit" value="Download dataset">
-      </form>
+    <div class="summary-container row">
+      <div class="form-holder col">
+        <form>
+          <div class="input-group sm-3">
+            <span class="input-group-text" id="locations-id">Квартали:</span>
+            <input type="text" class="form-control" placeholder="Редута, Сухата река, Младост 2..." aria-label="locations" aria-describedby="locations-id">
+          </div>
+          
+          <div class="input-group sm-3">
+            <span class="input-group-text" id="source-id">Източници:</span>
+            <input type="text" class="form-control" placeholder="imotbg, era, yavlena..." aria-label="sources" aria-describedby="source-id">
+            <span class="input-group-text" id="apartment-type-id">Тип:</span>
+            <input type="text" class="form-control" aria-describedby="apartment-type-id" placeholder="Едностаен,Двустаен,Тристаен" aria-label="Едностаен,Двустаен,Тристаен">
+          </div>
+
+          <div class="input-group sm-3">
+            <span class="input-group-text" id="size-id">Квадратура:</span>
+            <input type="text" class="form-control" aria-describedby="size-id" placeholder="Квадратура повече от..." aria-label="Квадратура повече от...">
+            <span class="input-group-text">кв.м.</span>
+
+            <input type="text" class="form-control" aria-describedby="price-id" placeholder="Цена по-ниска от..." aria-label="Цена по-ниска от...">
+            <span class="input-group-text">EUR</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" value="Filter">Приложи филтри</button>
+          <button type="submit" class="btn btn-primary" value="Download">Свали CSV</button>
+        </form>
+      </div>
+      <div class="summary-holde col">
+        Add summary
+      </div>
     </div>
     {% for each_ad in ad_list %}
     <span class="card custom-card" style="width: 18rem;">
