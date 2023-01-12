@@ -33,6 +33,7 @@ class AdSource(enum.Enum):
     UES = "ues"
     YAVLENA = "yavlena"
     YOURHOME = "yourhome"
+    BEZKOMISIONA = "bezkomisiona"
 
 
 class HomeType(enum.Enum):

@@ -19,7 +19,6 @@ class Ads(BaseModel):
     location: str
     image: str
     scraping_date: str
-    taken_from: str
     # Adding this configuration will tell the model to read the data
     # even if it's not a dict but a model so
     # data could be retrieved in both ways:
@@ -58,3 +57,4 @@ class Summary(BaseModel):
     ues: int
     yavlena: int
     yourhome: int
+    bezkomisiona: int

@@ -93,15 +93,14 @@ def build_data_entry():
     """
 
     source_name = get_random_source()
-    taken_from = ".".join([source_name, "bg"])
-    url = "https://" + "/".join([taken_from, str(random.choice(range(100)))])
+    url = "https://" + "/".join([".".join([source_name, "bg"]), str(random.choice(range(100)))])
     price = get_random_price()
     home_type = get_home_type()
     home_size = get_random_home_size()
     location = get_random_location()
     image = EXAMPLE_IMG
     scraping_date = get_current_date()
-    return source_name, url, price, home_type, home_size, location, image, scraping_date, taken_from
+    return source_name, url, price, home_type, home_size, location, image, scraping_date
 
 
 def build_dataset(amount) -> list:
@@ -138,7 +137,7 @@ def create_ads_table(conn, table_name):
     Inital creation of the ads tables.
     """
     sql = f'''
-    CREATE TABLE {table_name} (
+    CREATE TABLE IF NOT EXISTS {table_name} (
     id INTEGER PRIMARY KEY,
 	source_name TEXT NOT NULL,
 	url TEXT NOT NULL,
@@ -147,8 +146,7 @@ def create_ads_table(conn, table_name):
 	home_size INTEGER NOT NULL,
     location TEXT NOT NULL,
     image TEXT NOT NULL,
-    scraping_date TEXT NOT NULL,
-    taken_from TEXT NOT NULL
+    scraping_date TEXT NOT NULL
 );
     '''
     cur = conn.cursor()
@@ -160,7 +158,7 @@ def create_summary_table(conn):
     Initial creation of the summary table.
     """
     sql = f'''
-    CREATE TABLE {Tables.SUMMARY.value} (
+    CREATE TABLE IF NOT EXISTS {Tables.SUMMARY.value} (
     id INTEGER PRIMARY KEY,
     addressbg INTEGER NOT NULL,
     arcoreal INTEGER NOT NULL,
@@ -178,7 +176,8 @@ def create_summary_table(conn):
     superimoti INTEGER NOT NULL,
     ues INTEGER NOT NULL,
     yavlena INTEGER NOT NULL,
-    yourhome INTEGER NOT NULL
+    yourhome INTEGER NOT NULL,
+    bezkomisiona INTEGER NOT NULL
 );
     '''
     cur = conn.cursor()
@@ -202,8 +201,8 @@ def add_entry(conn, table, entry):
     :param entry:
     :return: entry id
     """
-    sql = f''' INSERT INTO {table}(source_name, url, price, home_type, home_size, location, image, scraping_date, taken_from)
-              VALUES(?,?,?,?,?,?,?,?,?);'''
+    sql = f''' INSERT INTO {table}(source_name, url, price, home_type, home_size, location, image, scraping_date)
+              VALUES(?,?,?,?,?,?,?,?);'''
     cur = conn.cursor()
     cur.execute(sql, entry)
     conn.commit()

@@ -20,7 +20,6 @@ class Ads(Base):
     location = Column(String, unique=False, index=True)
     image = Column(String, unique=False, index=True)
     scraping_date = Column(String, unique=False, index=True)
-    taken_from = Column(String, unique=False, index=True)
 
 
 class NewAds(Base):
@@ -37,7 +36,6 @@ class NewAds(Base):
     location = Column(String, unique=False, index=True)
     image = Column(String, unique=False, index=True)
     scraping_date = Column(String, unique=False, index=True)
-    taken_from = Column(String, unique=False, index=True)
 
 
 class Summary(Base):
@@ -64,3 +62,4 @@ class Summary(Base):
     ues = Column(Integer, unique=False, index=True)
     yavlena = Column(Integer, unique=False, index=True)
     yourhome = Column(Integer, unique=False, index=True)
+    bezkomisiona = Column(Integer, unique=False, index=True)
