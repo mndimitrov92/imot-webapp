@@ -37,6 +37,45 @@
 
 {% endblock %}
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script>
+
+  $ (document).ready(function(){
+    var $filter_btn = $("#filter-btn").on("click", function(){
+      var filters_arr = [];
+      var loc = $("#locations-id").val();
+      var source = $("#source-id").val();
+      var home_type = $("#apartment-type-id").val();
+      var size = $("#size-id").val();
+      var price = $("#price-id").val();
+      if (loc) {
+        filters_arr.push(`location=${loc}`);
+      }
+
+      if (source) {
+        filters_arr.push(`source_name=${source}`);
+      }
+
+      if (home_type) {
+        filters_arr.push(`home_type==${home_type}`);
+      }
+
+      if (size) {
+        filters_arr.push(`home_size=${size}`);
+      }
+      if (price) {
+        filters_arr.push(`price=${price}`);
+      }
+
+      var filters = filters_arr.join("&");
+      var new_url =  `${location.origin}${location.pathname}?${filters}`;
+      location.href = new_url;
+
+    });
+  
+  });
+  </script>
 </body>
 </html>

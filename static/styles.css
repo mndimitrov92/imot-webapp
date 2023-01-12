@@ -171,8 +171,3 @@ body {
 #bezkomisiona {
     background-color: antiquewhite;
 }
-
-.form-holder, .summary-holder {
-    display: inline;
-    width: 50%;
-}
