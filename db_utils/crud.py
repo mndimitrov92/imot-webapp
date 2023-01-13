@@ -11,7 +11,7 @@ def get_filtered_ads(db: Session,
                      location: str = None,
                      home_size: int = None,
                      home_type: str = None,
-                     limit: int = 100,
+                     limit: int = 1000,
                      only_new_ads: bool = False):
     """
     Retrieve all ads based on the filters passed.
@@ -45,7 +45,7 @@ def get_filtered_ads(db: Session,
     return output.limit(limit).all()
 
 
-def get_ordered_ads(db: Session, limit: int = 100, only_new_ads: bool = False):
+def get_ordered_ads(db: Session, limit: int = 10000, only_new_ads: bool = False):
     """
     Retrieve all ads ordered by price - location - home-size - source_name - home-type.
     Params:

@@ -254,4 +254,4 @@ if __name__ == "__main__":
         for new_entry in new_ads_data:
             add_entry(conn, Tables.NEW_ADS.value, new_entry)
         add_summary_entry(conn, summary_data)
-        show(conn, Tables.SUMMARY.value)
+        show(conn, Tables.NEW_ADS.value)

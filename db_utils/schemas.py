@@ -10,7 +10,6 @@ class Ads(BaseModel):
     """
 
     id: int
-    title: str
     source_name: str
     url: str
     price: int
@@ -29,7 +28,7 @@ class Ads(BaseModel):
         orm_mode = True
 
 
-class NewAds(BaseModel):
+class NewAds(Ads):
     """
     Pydantic model for the new ads table.
     """
