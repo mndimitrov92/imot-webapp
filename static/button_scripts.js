@@ -16,7 +16,7 @@ function collectData() {
     filters_arr.push(`source_name=${source}`);
     }
     if (home_type) {
-    filters_arr.push(`home_type==${home_type}`);
+    filters_arr.push(`home_type=${home_type}`);
     }
     if (size) {
     filters_arr.push(`home_size=${size}`);
