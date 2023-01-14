@@ -7,7 +7,7 @@ import pydantic
 class Ads(pydantic.BaseModel):
     """
     Pydantic model for the ads table.
-    """ # pylint-disable=E1101
+    """ # pylint: disable=E1101
     id: int
     source_name: str
     url: str
