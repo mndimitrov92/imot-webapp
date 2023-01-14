@@ -1,3 +1,7 @@
+"""
+Main app module. 
+Initializes the application and starts the uvicorn server.
+"""
 import uvicorn
 from collections import defaultdict, Counter
 from fastapi import FastAPI, Request, Query, Depends
@@ -5,7 +9,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from typing import Optional, List
-from fastapi import FastAPI, Query, Depends
 from sqlalchemy.orm import Session
 from db_utils import models, crud, schemas
 from db_utils.database import SessionLocal, engine
@@ -20,14 +23,14 @@ models.Base.metadata.create_all(bind=engine)
 
 def get_db():
     """
-    It creates a database connection, and then yields it to the caller. 
-    The caller can then use the connection, and when it's done, the connection is closed. 
+    It creates a database connection, and then yields it to the caller.
+    The caller can then use the connection, and when it's done, the connection is closed.
     """
-    db = SessionLocal()
+    database = SessionLocal()
     try:
-        yield db
+        yield database
     finally:
-        db.close()
+        database.close()
 
 
 app = FastAPI()
@@ -66,8 +69,9 @@ def _build_summary_dict(dataset) -> Counter:
     return all_sources
 
 
-def _read_ads(source_name, price, location, home_size, home_type, limit, db, only_new_ads=False):
-    if any([param for param in [source_name, price, home_size, home_type, location] if param is not None]):
+def _read_ads(source_name, price, location, home_size,
+              home_type, limit, db, only_new_ads=False):
+    if any(param for param in [source_name, price, home_size, home_type, location] if param is not None):
         my_ads = crud.get_filtered_ads(db=db,
                                        source_name=source_name,
                                        price=price,
@@ -82,7 +86,8 @@ def _read_ads(source_name, price, location, home_size, home_type, limit, db, onl
     return my_ads
 
 
-def _display_ads(request, source_name, price, location, home_size, home_type, limit, db, only_new_ads=False):
+def _display_ads(request, source_name, price, location,
+                 home_size, home_type, limit, db, only_new_ads=False):
     # my_ads is a list of Ads objects. The attributes are the db columns
     my_ads = _read_ads(source_name, price, location,
                        home_size, home_type, limit, db, only_new_ads)
@@ -105,8 +110,8 @@ async def read_new_ads(request: Request,
                        db: Session = Depends(get_db),
                        ):
     """
-    Dispay function for all collected new ads with support for filters based on a set of price, location, source, 
-    home_size, home_type.
+    Dispay function for all collected new ads with support for filters based on a set of
+    price, location, source, home_size, home_type.
     """
     return _display_ads(request=request,
                         source_name=source_name,
@@ -129,8 +134,8 @@ async def read_all_ads(request: Request,
                        db: Session = Depends(get_db),
                        ):
     """
-    Dispay function for all collected ads with support for filters based on a set of price, location, source,
-    home_size, home_type.
+    Dispay function for all collected ads with support for filters based on a set of
+    price, location, source, home_size, home_type.
     """
     return _display_ads(request=request,
                         source_name=source_name,
@@ -152,7 +157,8 @@ async def download_all_ads(source_name: Optional[constants.AdSource] = None,
                            db: Session = Depends(get_db),
                            ):
     """
-
+    Download API endpoint function for all collected ads with support for filters based on a set of
+    price, location, source, home_size, home_type.
     """
     my_ads = _read_ads(source_name, price, location, home_size,
                        home_type, limit, db, only_new_ads=False)
@@ -160,7 +166,7 @@ async def download_all_ads(source_name: Optional[constants.AdSource] = None,
 
 
 @app.get("/download-new-ads", response_model=List[schemas.NewAds])
-async def download_all_ads(source_name: Optional[constants.AdSource] = None,
+async def download_new_ads(source_name: Optional[constants.AdSource] = None,
                            price: Optional[int] = Query(None, ge=1),
                            location: Optional[constants.AdLocation] = None,
                            home_size: Optional[int] = Query(None, ge=1),
@@ -169,7 +175,8 @@ async def download_all_ads(source_name: Optional[constants.AdSource] = None,
                            db: Session = Depends(get_db),
                            ):
     """
-
+    Download API endpoint function for new ads with support for filters based on a set of
+    price, location, source, home_size, home_type.
     """
     my_ads = _read_ads(source_name, price, location, home_size,
                        home_type, limit, db, only_new_ads=True)

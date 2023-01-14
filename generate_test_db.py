@@ -4,7 +4,6 @@ Utility script to quickly populate the tables with data.
 Needs to be executed only once.
 """
 import enum
-import os
 import random
 import sqlite3
 from sqlite3 import Error
@@ -12,14 +11,13 @@ from datetime import datetime
 
 import utils
 
+EXAMPLE_IMG = "https://www.treidplas.bg/wp-content/uploads/2014/06/default-placeholder.png"
+
 
 class Tables(enum.Enum):
     ADS = "ads"
     NEW_ADS = "new_ads"
     SUMMARY = "summary"
-
-
-EXAMPLE_IMG = "https://www.treidplas.bg/wp-content/uploads/2014/06/default-placeholder.png"
 
 
 def create_connection(db_file):
@@ -29,12 +27,12 @@ def create_connection(db_file):
     :param db_file: database file
     :return: Connection object or None
     """
-    conn = None
+    connection = None
     try:
-        conn = sqlite3.connect(db_file)
-    except Error as e:
-        print(e)
-    return conn
+        connection = sqlite3.connect(db_file)
+    except Error as exc:
+        print(exc)
+    return connection
 
 
 # Data preparation

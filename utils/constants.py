@@ -72,7 +72,7 @@ class AdLocation(enum.Enum):
     VRAJDEBNA = "Враждебна"
     VRABNICA_1 = "Връбница 1"
     VRABNICA_2 = "Връбница 2"
-    Gevreliiski = "Геврелийски"
+    GEVRELIISKI = "Геврелийски"
     GEO_MILEV = "Гео Милев"
     GORNA_BANYA = "Горна Баня"
     GORUBLYANE = "Горубляне"
