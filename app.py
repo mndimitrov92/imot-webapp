@@ -1,4 +1,5 @@
 import uvicorn
+from collections import defaultdict, Counter
 from fastapi import FastAPI, Request, Query, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -47,6 +48,24 @@ async def read_homepage(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
+def _build_summary_dict(dataset) -> Counter:
+    """
+    It takes a dataset and returns a dictionary of the number of listings per source
+
+    :param dataset: a list of tuples, where each tuple is a listing and its source
+    :return: A dictionary with the source as the key and the number of listings as the value.
+    """
+    all_sources = defaultdict(int)
+    # Initial population of the dictionary
+    for source in list(constants.AdSource):
+        all_sources[source.value]
+    # collect the sources that have listings
+    sources = [data.source_name for data in dataset]
+    source_counter = Counter(sources)
+    all_sources.update(source_counter)
+    return all_sources
+
+
 def _read_ads(source_name, price, location, home_size, home_type, limit, db, only_new_ads=False):
     if any([param for param in [source_name, price, home_size, home_type, location] if param is not None]):
         my_ads = crud.get_filtered_ads(db=db,
@@ -67,7 +86,12 @@ def _display_ads(request, source_name, price, location, home_size, home_type, li
     # my_ads is a list of Ads objects. The attributes are the db columns
     my_ads = _read_ads(source_name, price, location,
                        home_size, home_type, limit, db, only_new_ads)
-    return templates.TemplateResponse("ads.html", {"request": request, "ad_list": my_ads})
+    dict_param = {"request": request, "ad_list": my_ads, "show_summary": False}
+    if only_new_ads:
+        summary = _build_summary_dict(my_ads)
+        dict_param["summary_data"] = summary
+        dict_param["show_summary"] = True
+    return templates.TemplateResponse("ads.html", dict_param)
 
 
 @app.get("/new-ads", response_class=HTMLResponse, response_model=List[schemas.NewAds])

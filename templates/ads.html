@@ -29,8 +29,14 @@
           <div class="btn btn-primary" id="download-btn">Свали CSV</div>
         </form>
       </div>
-      <div class="summary-holde col">
-        Add summary
+      <div class="summary-holder col">
+        {% if show_summary %}
+        {% for source, value in summary_data.items() %}
+        <div>
+          {{ source }} = {{ value }}
+        </div>
+        {% endfor %}
+        {% endif %}
       </div>
     </div>
     <hr>

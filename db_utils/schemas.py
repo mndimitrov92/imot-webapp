@@ -32,28 +32,3 @@ class NewAds(Ads):
     """
     Pydantic model for the new ads table.
     """
-
-
-class Summary(BaseModel):
-    """
-    Pydantic model for the summary table.
-    """
-    id: int
-    addressbg: int
-    arcoreal: int
-    avista: int
-    bulgarianproperties: int
-    era: int
-    galardo: int
-    home2u: int
-    imotbg: int
-    luximmo: int
-    mirelabg: int
-    novdom1: int
-    place2live: int
-    primoplus: int
-    superimoti: int
-    ues: int
-    yavlena: int
-    yourhome: int
-    bezkomisiona: int

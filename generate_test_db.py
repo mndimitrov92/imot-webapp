@@ -9,7 +9,6 @@ import random
 import sqlite3
 from sqlite3 import Error
 from datetime import datetime
-from collections import Counter, defaultdict
 
 import utils
 
@@ -93,7 +92,9 @@ def build_data_entry():
     """
 
     source_name = get_random_source()
-    url = "https://" + "/".join([".".join([source_name, "bg"]), str(random.choice(range(100)))])
+    url = "https://" + \
+        "/".join([".".join([source_name, "bg"]),
+                 str(random.choice(range(100)))])
     price = get_random_price()
     home_type = get_home_type()
     home_size = get_random_home_size()
@@ -112,24 +113,6 @@ def build_dataset(amount) -> list:
     :return: A list of dictionaries.
     """
     return [build_data_entry() for _ in range(amount)]
-
-
-def build_summary_dataset(dataset) -> Counter:
-    """
-    It takes a dataset and returns a dictionary of the number of listings per source
-
-    :param dataset: a list of tuples, where each tuple is a listing and its source
-    :return: A dictionary with the source as the key and the number of listings as the value.
-    """
-    all_sources = defaultdict(int)
-    # Initial population of the dictionary
-    for source in list(utils.constants.AdSource):
-        all_sources[source.value]
-    # collect the sources that have listings
-    sources = [x[0] for x in dataset]
-    source_counter = Counter(sources)
-    all_sources.update(source_counter)
-    return all_sources
 
 
 def create_ads_table(conn, table_name):
@@ -153,44 +136,12 @@ def create_ads_table(conn, table_name):
     cur.execute(sql)
 
 
-def create_summary_table(conn):
-    """
-    Initial creation of the summary table.
-    """
-    sql = f'''
-    CREATE TABLE IF NOT EXISTS {Tables.SUMMARY.value} (
-    id INTEGER PRIMARY KEY,
-    addressbg INTEGER NOT NULL,
-    arcoreal INTEGER NOT NULL,
-    avista INTEGER NOT NULL,
-    bulgarianproperties INTEGER NOT NULL,
-    era INTEGER NOT NULL,
-    galardo INTEGER NOT NULL,
-    home2u INTEGER NOT NULL,
-    imotbg INTEGER NOT NULL,
-    luximmo INTEGER NOT NULL,
-    mirelabg INTEGER NOT NULL,
-    novdom1 INTEGER NOT NULL,
-    place2live INTEGER NOT NULL,
-    primoplus INTEGER NOT NULL,
-    superimoti INTEGER NOT NULL,
-    ues INTEGER NOT NULL,
-    yavlena INTEGER NOT NULL,
-    yourhome INTEGER NOT NULL,
-    bezkomisiona INTEGER NOT NULL
-);
-    '''
-    cur = conn.cursor()
-    cur.execute(sql)
-
-
 def generate_tables(conn):
     """
     Creates all needed tables - both ads tables and the summary table
     """
     create_ads_table(conn, Tables.ADS.value)
     create_ads_table(conn, Tables.NEW_ADS.value)
-    create_summary_table(conn)
 
 
 def add_entry(conn, table, entry):
@@ -205,25 +156,6 @@ def add_entry(conn, table, entry):
               VALUES(?,?,?,?,?,?,?,?);'''
     cur = conn.cursor()
     cur.execute(sql, entry)
-    conn.commit()
-    return cur.lastrowid
-
-
-def add_summary_entry(conn, entry):
-    """
-    Add entry into the ads table.
-    :param conn:
-    :param entry:
-    :return: entry id
-    """
-    collected_sources = entry.keys()
-    all_sources_joined = ", ".join(collected_sources)
-    expected = ["?" for _ in collected_sources]
-    expected_entries = ",".join(expected)
-    sql = f'''INSERT INTO {Tables.SUMMARY.value}({all_sources_joined})
-              VALUES({expected_entries});'''
-    cur = conn.cursor()
-    cur.execute(sql, tuple(entry.values()))
     conn.commit()
     return cur.lastrowid
 
@@ -244,7 +176,6 @@ if __name__ == "__main__":
     # Generate the needed data
     ads_data = build_dataset(100)
     new_ads_data = build_dataset(25)
-    summary_data = build_summary_dataset(new_ads_data)
 
     with conn:
         # Generate the tables and add the needed entries
@@ -253,5 +184,4 @@ if __name__ == "__main__":
             add_entry(conn, Tables.ADS.value, entry)
         for new_entry in new_ads_data:
             add_entry(conn, Tables.NEW_ADS.value, new_entry)
-        add_summary_entry(conn, summary_data)
         show(conn, Tables.NEW_ADS.value)
