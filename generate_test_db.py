@@ -15,6 +15,9 @@ EXAMPLE_IMG = "https://www.treidplas.bg/wp-content/uploads/2014/06/default-place
 
 
 class Tables(enum.Enum):
+    """
+    Helper enumeration class.
+    """
     ADS = "ads"
     NEW_ADS = "new_ads"
     SUMMARY = "summary"
@@ -37,6 +40,10 @@ def create_connection(db_file):
 
 # Data preparation
 def get_random_location() -> str:
+    """
+    It returns a random location from the list of all locations
+    :return: A random location from the list of all locations
+    """
     all_locations = [loc.value for loc in list(utils.AdLocation)]
     return random.choice(all_locations)
 
@@ -141,7 +148,7 @@ def generate_tables(connection):
     create_ads_table(connection, Tables.NEW_ADS.value)
 
 
-def add_entry(connection, table, entry):
+def add_entry(connection, table, db_entry):
     """
     Add entry into the ads table.
     :param connection:
@@ -152,7 +159,7 @@ def add_entry(connection, table, entry):
     sql = f''' INSERT INTO {table}(source_name, url, price, home_type, home_size, location, image, scraping_date)
               VALUES(?,?,?,?,?,?,?,?);'''
     cur = connection.cursor()
-    cur.execute(sql, entry)
+    cur.execute(sql, db_entry)
     connection.commit()
     return cur.lastrowid
 

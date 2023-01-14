@@ -8,7 +8,6 @@ class Ads(pydantic.BaseModel):
     """
     Pydantic model for the ads table.
     """
-
     id: int
     source_name: str
     url: str

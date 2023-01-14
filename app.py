@@ -61,7 +61,8 @@ def _build_summary_dict(dataset) -> Counter:
     """
     all_sources = defaultdict(int)
     for source in list(constants.AdSource):
-        all_sources[source.value]
+        # Initialize the value for all sources
+        all_sources[source.value] = 0
     # collect the sources that have listings
     sources = [data.source_name for data in dataset]
     source_counter = Counter(sources)
