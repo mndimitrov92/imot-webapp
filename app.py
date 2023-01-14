@@ -3,16 +3,18 @@ Main app module.
 Initializes the application and starts the uvicorn server.
 """
 from collections import defaultdict, Counter
+from typing import Optional, List
 from fastapi import FastAPI, Request, Query, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from typing import Optional, List
 from sqlalchemy.orm import Session
+import uvicorn
+
 from db_utils import models, crud, schemas
 from db_utils.database import SessionLocal, engine
 from utils import constants, helpers
-import uvicorn
+
 
 # build the database
 models.Base.metadata.create_all(bind=engine)
@@ -58,7 +60,6 @@ def _build_summary_dict(dataset) -> Counter:
     :return: A dictionary with the source as the key and the number of listings as the value.
     """
     all_sources = defaultdict(int)
-    # Initial population of the dictionary
     for source in list(constants.AdSource):
         all_sources[source.value]
     # collect the sources that have listings
@@ -70,7 +71,9 @@ def _build_summary_dict(dataset) -> Counter:
 
 def _read_ads(source_name, price, location, home_size,
               home_type, limit, db_session, only_new_ads=False):
-    if any(param for param in [source_name, price, home_size, home_type, location] if param is not None):
+    filters_list = [source_name, price, home_size, home_type, location]
+    filtered = (param for param in filters_list if param is not None)
+    if any(filtered):
         my_ads = crud.get_filtered_ads(db_session=db_session,
                                        source_name=source_name,
                                        price=price,
