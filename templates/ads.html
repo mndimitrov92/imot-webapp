@@ -1,78 +1,76 @@
 {% extends "base.html" %}
 
-  {% block content %}
-    <div class="summary-container row">
-      <div class="form-holder col">
-        <form>
-          <div class="input-group sm-3">
-            <span class="input-group-text">Квартал:</span>
-            <input type="text" id="locations-id" class="form-control" placeholder="Редута/Сухата река/Младост 2...">
-          </div>
-          
-          <div class="input-group sm-3">
-            <span class="input-group-text" >Източник:</span>
-            <input type="text" class="form-control" id="source-id" placeholder="imotbg/era/yavlena...">
-            <span class="input-group-text">Тип:</span>
-            <input type="text" class="form-control" id="apartment-type-id" placeholder="Едностаен/Двустаен/Тристаен">
-          </div>
-
-          <div class="input-group sm-3">
-            <span class="input-group-text">Квадратура:</span>
-            <input type="text" class="form-control" id="size-id" placeholder="Квадратура повече от...">
-            <span class="input-group-text">кв.м.</span>
-
-            <input type="text" class="form-control" id="price-id" placeholder="Цена по-ниска от...">
-            <span class="input-group-text">EUR</span>
-          </div>
-
-          <div class="btn btn-primary" id="filter-btn">Приложи филтри</div>
-          <div class="btn btn-primary" id="download-btn">Свали CSV</div>
-        </form>
+{% block content %}
+<div class="summary-container row">
+  <div class="form-holder col">
+    <form>
+      <div class="input-group sm-3">
+        <span class="input-group-text">Квартал:</span>
+        <input type="text" id="locations-id" class="form-control" placeholder="Редута/Сухата река/Младост 2...">
       </div>
-      <div class="summary-holder col table-responsive-sm">
-        {% if show_summary %}
-          <table class="table table-sm table-striped table-dark">
-            <thead>
-              <tr>
-                <th scope="col">Обяви от</th>
-                <th scope="col">Брой</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for source, value in summary_data.items() %}
-                <tr>
-                  <td>{{ source }}</td>
-                  {% if value %}
-                  <td>{{ value }}</td>
-                  {% else %}
-                  <td style="color: red;">{{ value }}</td>
-                  {% endif %}
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% endif %}
-      </div>
-    </div>
-    <hr>
-    {% for each_ad in ad_list %}
-    <span class="card custom-card" style="width: 18rem;">
-      <div class= "header" id="{{ each_ad.source_name }}"> Взето от: {{ each_ad.source_name }}
-      </div>
-      <img src="{{ each_ad.image }}" class="card-img-top" alt="test">
-      <div class="card-body">
-        <h5 class="card-title">Обява № {{ each_ad.id }}</h5>
-        <p class="card-text">
-        <b>Тип на имота</b>: {{ each_ad.home_type }}  <br>
-        <b>Площ</b>: {{ each_ad.home_size }} кв.м<br>
-        <b>Квартал</b>: {{ each_ad.location }}  <br>
-        <b>Цена</b>: €{{ "{:,}".format(each_ad.price) }}  <br>
-        <b>Дата на вземане</b>: {{ each_ad.scraping_date }}
-        </p>
-        <a href="{{ each_ad.url }}" class="btn btn-primary">Към страницата на обявата</a>
-      </div>
-    </span>
-    {% endfor %}
-  {% endblock %}
 
+      <div class="input-group sm-3">
+        <span class="input-group-text">Източник:</span>
+        <input type="text" class="form-control" id="source-id" placeholder="imotbg/era/yavlena...">
+        <span class="input-group-text">Тип:</span>
+        <input type="text" class="form-control" id="apartment-type-id" placeholder="Едностаен/Двустаен/Тристаен">
+      </div>
 
+      <div class="input-group sm-3">
+        <span class="input-group-text">Квадратура:</span>
+        <input type="text" class="form-control" id="size-id" placeholder="Квадратура повече от...">
+        <span class="input-group-text">кв.м.</span>
+
+        <input type="text" class="form-control" id="price-id" placeholder="Цена по-ниска от...">
+        <span class="input-group-text">EUR</span>
+      </div>
+
+      <div class="btn btn-primary" id="filter-btn">Приложи филтри</div>
+      <div class="btn btn-primary" id="download-btn">Свали CSV</div>
+    </form>
+  </div>
+  <div class="summary-holder col table-responsive-sm">
+    {% if show_summary %}
+    <table class="table table-sm table-striped table-dark">
+      <thead>
+        <tr>
+          <th scope="col">Обяви от</th>
+          <th scope="col">Брой</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for source, value in summary_data.items() %}
+        <tr>
+          <td>{{ source }}</td>
+          {% if value %}
+          <td>{{ value }}</td>
+          {% else %}
+          <td style="color: red;">{{ value }}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+</div>
+<hr>
+{% for each_ad in ad_list %}
+<span class="card custom-card" style="width: 18rem;">
+  <div class="header" id="{{ each_ad.source_name }}"> Взето от: {{ each_ad.source_name }}
+  </div>
+  <img src="{{ each_ad.image }}" class="card-img-top" alt="test">
+  <div class="card-body">
+    <h5 class="card-title">Обява № {{ each_ad.id }}</h5>
+    <p class="card-text">
+      <b>Тип на имота</b>: {{ each_ad.home_type }} <br>
+      <b>Площ</b>: {{ each_ad.home_size }} кв.м<br>
+      <b>Квартал</b>: {{ each_ad.location }} <br>
+      <b>Цена</b>: €{{ "{:,}".format(each_ad.price) }} <br>
+      <b>Дата на вземане</b>: {{ each_ad.scraping_date }}
+    </p>
+    <a href="{{ each_ad.url }}" class="btn btn-primary">Към страницата на обявата</a>
+  </div>
+</span>
+{% endfor %}
+{% endblock %}

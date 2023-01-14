@@ -5,7 +5,8 @@ import os
 import enum
 
 
-__all__ = ["STATIC_DIR", "DATA_DIR", "DATABASE","AdSource", "AdLocation", "HomeType"]
+__all__ = ["STATIC_DIR", "DATA_DIR", "DATABASE",
+           "AdSource", "AdLocation", "HomeType"]
 
 
 STATIC_DIR = os.path.join(os.getcwd(), 'static')
