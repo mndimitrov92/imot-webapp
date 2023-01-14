@@ -162,7 +162,7 @@ class AdLocation(enum.Enum):
     TOLSTOI = "Толстой"
     TREBICH = "Требич"
     TRIAGALNIKA = "Триъгълника"
-    FAKULTETA = "Факилтета"
+    FAKULTETA = "Факултета"
     FILIPOVCI = "Филиповци"
     FONDOVI_JILISHTA = "Фондови жилища"
     HADJI_DIMITAR = "Хаджи Димитър"

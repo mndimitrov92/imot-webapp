@@ -29,13 +29,28 @@
           <div class="btn btn-primary" id="download-btn">Свали CSV</div>
         </form>
       </div>
-      <div class="summary-holder col">
+      <div class="summary-holder col table-responsive-sm">
         {% if show_summary %}
-        {% for source, value in summary_data.items() %}
-        <div>
-          {{ source }} = {{ value }}
-        </div>
-        {% endfor %}
+          <table class="table table-sm table-striped table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Обяви от</th>
+                <th scope="col">Брой</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for source, value in summary_data.items() %}
+                <tr>
+                  <td>{{ source }}</td>
+                  {% if value %}
+                  <td>{{ value }}</td>
+                  {% else %}
+                  <td style="color: red;">{{ value }}</td>
+                  {% endif %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         {% endif %}
       </div>
     </div>
@@ -58,10 +73,6 @@
       </div>
     </span>
     {% endfor %}
-    <script>
-
-
-    </script>
   {% endblock %}
 
 

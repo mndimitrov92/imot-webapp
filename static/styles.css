@@ -98,6 +98,12 @@ body {
     text-decoration: underline
 }
 
+.summary-holder .table {
+    width: 80%;
+    border-radius: 1em;
+    overflow: hidden;
+}
+
 
 /* Custom backgrounds for the different websites */
 #imotbg {
