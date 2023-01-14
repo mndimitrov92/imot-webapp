@@ -5,10 +5,12 @@ import os
 import enum
 
 
-__all__ = ["STATIC_DIR", "AdSource", "AdLocation"]
+__all__ = ["STATIC_DIR", "DATA_DIR", "DATABASE","AdSource", "AdLocation", "HomeType"]
 
 
 STATIC_DIR = os.path.join(os.getcwd(), 'static')
+DATA_DIR = os.path.join(os.getcwd(), "data")
+DATABASE = os.path.join(DATA_DIR, "listings_data.db")
 
 
 class AdSource(enum.Enum):

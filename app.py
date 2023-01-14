@@ -9,7 +9,7 @@ from fastapi import FastAPI, Query, Depends
 from sqlalchemy.orm import Session
 from db_utils import models, crud, schemas
 from db_utils.database import SessionLocal, engine
-from utils import constants
+from utils import constants, helpers
 
 
 # build the database
@@ -193,6 +193,7 @@ def run():
     It starts a server on port 8000, and when you go to the URL http://localhost:8000/docs, it will show
     you the documentation for the API
     """
+    helpers.create_db_folder()
     config = uvicorn.Config("app:app", port=8000, log_level="info")
     server = uvicorn.Server(config)
     server.run()

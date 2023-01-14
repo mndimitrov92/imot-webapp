@@ -20,7 +20,6 @@ class Tables(enum.Enum):
 
 
 EXAMPLE_IMG = "https://www.treidplas.bg/wp-content/uploads/2014/06/default-placeholder.png"
-DATABASE = os.path.join(os.getcwd(), "data",  "listings_data.db")
 
 
 def create_connection(db_file):
@@ -40,7 +39,7 @@ def create_connection(db_file):
 
 # Data preparation
 def get_random_location() -> str:
-    all_locations = [loc.value for loc in list(utils.constants.AdLocation)]
+    all_locations = [loc.value for loc in list(utils.AdLocation)]
     return random.choice(all_locations)
 
 
@@ -49,7 +48,7 @@ def get_random_source() -> str:
     It returns a random string from a list of strings
     :return: A random source from the list of all sources.
     """
-    all_sources = [source.value for source in list(utils.constants.AdSource)]
+    all_sources = [source.value for source in list(utils.AdSource)]
     return random.choice(all_sources)
 
 
@@ -82,7 +81,7 @@ def get_home_type():
     It returns a random value from the list of values in the HomeType enum
     :return: A random value from the list of values in the HomeType enum.
     """
-    return random.choice([home.value for home in list(utils.constants.HomeType)])
+    return random.choice([home.value for home in list(utils.HomeType)])
 
 
 def build_data_entry():
@@ -172,7 +171,8 @@ def show(conn, table):
 
 
 if __name__ == "__main__":
-    conn = create_connection(DATABASE)
+    utils.create_db_folder()
+    conn = create_connection(utils.DATABASE)
     # Generate the needed data
     ads_data = build_dataset(100)
     new_ads_data = build_dataset(25)
