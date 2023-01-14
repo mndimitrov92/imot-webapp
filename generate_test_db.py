@@ -156,7 +156,8 @@ def add_entry(connection, table, db_entry):
     :param entry:
     :return: entry id
     """
-    sql = f''' INSERT INTO {table}(source_name, url, price, home_type, home_size, location, image, scraping_date)
+    sql = f'''INSERT INTO {table}
+              (source_name, url, price, home_type, home_size, location, image, scraping_date)
               VALUES(?,?,?,?,?,?,?,?);'''
     cur = connection.cursor()
     cur.execute(sql, db_entry)

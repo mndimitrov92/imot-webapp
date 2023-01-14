@@ -4,7 +4,7 @@ Module containing the Pydantic models.
 import pydantic
 
 
-class Ads(pydantic.BaseModel):
+class Ads(pydantic.BaseModel): # pylint-disable=E1101
     """
     Pydantic model for the ads table.
     """
