@@ -1,10 +1,10 @@
 """
 Module containing the Pydantic models.
 """
-from pydantic import BaseModel
+import pydantic
 
 
-class Ads(BaseModel):
+class Ads(pydantic.BaseModel):
     """
     Pydantic model for the ads table.
     """
@@ -25,6 +25,9 @@ class Ads(BaseModel):
     # data.item
 
     class Config:
+        """
+        Helper configuration class for easier property retrieval.
+        """
         orm_mode = True
 
 

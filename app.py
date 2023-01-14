@@ -1,8 +1,7 @@
 """
-Main app module. 
+Main app module.
 Initializes the application and starts the uvicorn server.
 """
-import uvicorn
 from collections import defaultdict, Counter
 from fastapi import FastAPI, Request, Query, Depends
 from fastapi.responses import HTMLResponse
@@ -13,7 +12,7 @@ from sqlalchemy.orm import Session
 from db_utils import models, crud, schemas
 from db_utils.database import SessionLocal, engine
 from utils import constants, helpers
-
+import uvicorn
 
 # build the database
 models.Base.metadata.create_all(bind=engine)
@@ -70,9 +69,9 @@ def _build_summary_dict(dataset) -> Counter:
 
 
 def _read_ads(source_name, price, location, home_size,
-              home_type, limit, db, only_new_ads=False):
+              home_type, limit, db_session, only_new_ads=False):
     if any(param for param in [source_name, price, home_size, home_type, location] if param is not None):
-        my_ads = crud.get_filtered_ads(db=db,
+        my_ads = crud.get_filtered_ads(db_session=db_session,
                                        source_name=source_name,
                                        price=price,
                                        location=location,
@@ -82,15 +81,15 @@ def _read_ads(source_name, price, location, home_size,
                                        only_new_ads=only_new_ads)
     else:
         my_ads = crud.get_ordered_ads(
-            db=db, limit=limit, only_new_ads=only_new_ads)
+            db_session=db_session, limit=limit, only_new_ads=only_new_ads)
     return my_ads
 
 
 def _display_ads(request, source_name, price, location,
-                 home_size, home_type, limit, db, only_new_ads=False):
+                 home_size, home_type, limit, db_session, only_new_ads=False):
     # my_ads is a list of Ads objects. The attributes are the db columns
     my_ads = _read_ads(source_name, price, location,
-                       home_size, home_type, limit, db, only_new_ads)
+                       home_size, home_type, limit, db_session, only_new_ads)
     dict_param = {"request": request, "ad_list": my_ads, "show_summary": False}
     if only_new_ads:
         summary = _build_summary_dict(my_ads)
@@ -107,7 +106,7 @@ async def read_new_ads(request: Request,
                        home_size: Optional[int] = Query(None, ge=1),
                        home_type: Optional[constants.HomeType] = None,
                        limit: Optional[int] = Query(None, ge=1),
-                       db: Session = Depends(get_db),
+                       db_session: Session = Depends(get_db),
                        ):
     """
     Dispay function for all collected new ads with support for filters based on a set of
@@ -119,7 +118,7 @@ async def read_new_ads(request: Request,
                         home_size=home_size,
                         home_type=home_type,
                         limit=limit,
-                        db=db,
+                        db_session=db_session,
                         only_new_ads=True)
 
 
@@ -131,7 +130,7 @@ async def read_all_ads(request: Request,
                        home_size: Optional[int] = Query(None, ge=1),
                        home_type: Optional[constants.HomeType] = None,
                        limit: Optional[int] = Query(None, ge=1, le=100),
-                       db: Session = Depends(get_db),
+                       db_session: Session = Depends(get_db),
                        ):
     """
     Dispay function for all collected ads with support for filters based on a set of
@@ -144,7 +143,7 @@ async def read_all_ads(request: Request,
                         home_size=home_size,
                         home_type=home_type,
                         limit=limit,
-                        db=db)
+                        db_session=db_session)
 
 
 @app.get("/download-all-ads", response_model=List[schemas.Ads])
@@ -154,14 +153,14 @@ async def download_all_ads(source_name: Optional[constants.AdSource] = None,
                            home_size: Optional[int] = Query(None, ge=1),
                            home_type: Optional[constants.HomeType] = None,
                            limit: Optional[int] = Query(None, ge=1),
-                           db: Session = Depends(get_db),
+                           db_session: Session = Depends(get_db),
                            ):
     """
     Download API endpoint function for all collected ads with support for filters based on a set of
     price, location, source, home_size, home_type.
     """
     my_ads = _read_ads(source_name, price, location, home_size,
-                       home_type, limit, db, only_new_ads=False)
+                       home_type, limit, db_session, only_new_ads=False)
     return my_ads
 
 
@@ -172,14 +171,14 @@ async def download_new_ads(source_name: Optional[constants.AdSource] = None,
                            home_size: Optional[int] = Query(None, ge=1),
                            home_type: Optional[constants.HomeType] = None,
                            limit: Optional[int] = Query(None, ge=1),
-                           db: Session = Depends(get_db),
+                           db_session: Session = Depends(get_db),
                            ):
     """
     Download API endpoint function for new ads with support for filters based on a set of
     price, location, source, home_size, home_type.
     """
     my_ads = _read_ads(source_name, price, location, home_size,
-                       home_type, limit, db, only_new_ads=True)
+                       home_type, limit, db_session, only_new_ads=True)
     return my_ads
 
 
@@ -197,8 +196,8 @@ async def read_additional_data(request: Request):
 
 def run():
     """
-    It starts a server on port 8000, and when you go to the URL http://localhost:8000/docs, it will show
-    you the documentation for the API
+    It starts a server on port 8000, and when you go to the URL http://localhost:8000/docs,
+    it will show you the documentation for the API
     """
     helpers.create_db_folder()
     config = uvicorn.Config("app:app", port=8000, log_level="info")

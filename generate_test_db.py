@@ -112,7 +112,7 @@ def build_dataset(amount) -> list:
     return [build_data_entry() for _ in range(amount)]
 
 
-def create_ads_table(conn, table_name):
+def create_ads_table(connection, table_name):
     """
     Inital creation of the ads tables.
     """
@@ -129,39 +129,39 @@ def create_ads_table(conn, table_name):
     scraping_date TEXT NOT NULL
 );
     '''
-    cur = conn.cursor()
+    cur = connection.cursor()
     cur.execute(sql)
 
 
-def generate_tables(conn):
+def generate_tables(connection):
     """
     Creates all needed tables - both ads tables and the summary table
     """
-    create_ads_table(conn, Tables.ADS.value)
-    create_ads_table(conn, Tables.NEW_ADS.value)
+    create_ads_table(connection, Tables.ADS.value)
+    create_ads_table(connection, Tables.NEW_ADS.value)
 
 
-def add_entry(conn, table, entry):
+def add_entry(connection, table, entry):
     """
     Add entry into the ads table.
-    :param conn:
+    :param connection:
     :param table:
     :param entry:
     :return: entry id
     """
     sql = f''' INSERT INTO {table}(source_name, url, price, home_type, home_size, location, image, scraping_date)
               VALUES(?,?,?,?,?,?,?,?);'''
-    cur = conn.cursor()
+    cur = connection.cursor()
     cur.execute(sql, entry)
-    conn.commit()
+    connection.commit()
     return cur.lastrowid
 
 
-def show(conn, table):
+def show(connection, table):
     """
     Visualize all entries in the ads table.
     """
-    cur = conn.cursor()
+    cur = connection.cursor()
     cur.execute(f"SELECT * FROM {table};")
     rows = cur.fetchall()
     for row in rows:

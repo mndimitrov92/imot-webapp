@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from . import models
 
 
-def get_filtered_ads(db: Session,
+def get_filtered_ads(db_session: Session,
                      source_name: str = None,
                      price: int = None,
                      location: str = None,
@@ -29,7 +29,7 @@ def get_filtered_ads(db: Session,
     """
     model_ads = models.NewAds if only_new_ads else models.Ads
 
-    output = db.query(model_ads)
+    output = db_session.query(model_ads)
     if source_name is not None:
         output = output.filter(model_ads.source_name == source_name.value)
     if location is not None:
@@ -45,16 +45,16 @@ def get_filtered_ads(db: Session,
     return output.limit(limit).all()
 
 
-def get_ordered_ads(db: Session, limit: int = 10000, only_new_ads: bool = False):
+def get_ordered_ads(db_session: Session, limit: int = 10000, only_new_ads: bool = False):
     """
     Retrieve all ads ordered by price - location - home-size - source_name - home-type.
     Params:
-    db: the database session
+    db_session: the database session
     limit(Optional): The amount of entries to be shown
     only_new_ads: Flag to indicate whether all ads will be displayed or only the new ones
     """
     model_ads = models.NewAds if only_new_ads else models.Ads
     order_precedence = ("price", "location", "home_size",
                         "source_name", "home_type")
-    output = db.query(model_ads)
+    output = db_session.query(model_ads)
     return output.order_by(*order_precedence).limit(limit).all()
