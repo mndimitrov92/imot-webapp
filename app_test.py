@@ -163,89 +163,13 @@ class TestBasicAppEndpoints():
             response.template.name
 
 
-class TestNewAds:
-    """
-    Test cases for the query parameters of the new-ads endpoint.
-    """
-    # Good weather
-
-    def test_read_no_filters(self):
-        """
-        Showing the data without filters should be sorted.
-        """
-        pass
-
-    def test_read_with_limit(self):
-        pass
-
-    def test_location_filter(self):
-        pass
-
-    def test_price_filter(self):
-        pass
-
-    def test_size_filter(self):
-        pass
-
-    def test_source_filter(self):
-        pass
-
-    def test_type_filter(self):
-        pass
-
-    def test_combo_filters(self):
-        pass
-
-    def test_all_filters_applied(self):
-        pass
-
-    # Multiple values for a query parameter
-    def test_multiple_locations(self):
-        pass
-
-    def test_multiple_sources(self):
-        pass
-
-    def test_multiple_types(self):
-        pass
-
-    # Bad weather testcases
-    def test_invalid_location_filter(self):
-        pass
-
-    def test_invalid_source_filter(self):
-        pass
-
-    def test_invalid_type_filter(self):
-        pass
-
-    def test_invalid_size_filter(self):
-        pass
-
-    def test_invalid_price_filter(self):
-        pass
-
-    def test_all_filters_invalid_location(self):
-        pass
-
-    def test_all_filters_invalid_source(self):
-        pass
-
-    def test_all_filters_invalid_price(self):
-        pass
-
-    def test_all_filters_invalid_size(self):
-        pass
-
-    def test_all_filters_invalid_type(self):
-        pass
-
-
-class TestAllAds(TestNewAds):
-    pass
-
+# The all-ads and new-ads endpoind behave the same way as their download counterparts.
+# They just show the content in an HTML response format instead of csv
 
 class TestDownloadNewAds:
+    """
+    Testing the behavior of the download-new-ads endpoint.
+    """
 
     @classmethod
     def setup_class(cls):
@@ -457,6 +381,9 @@ class TestDownloadNewAds:
 
 
 class TestDownloadAllAds(TestDownloadNewAds):
+    """
+    Testing the behavior of the download-all-ads endpoint.
+    """
 
     @classmethod
     def setup_class(cls):
