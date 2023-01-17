@@ -11,7 +11,7 @@ def get_filtered_ads(db_session: Session,
                      location: str = None,
                      home_size: int = None,
                      home_type: str = None,
-                     limit: int = 1000,
+                     limit: int = 10000,
                      only_new_ads: bool = False):
     """
     Retrieve all ads based on the filters passed.
