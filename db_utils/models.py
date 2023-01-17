@@ -5,7 +5,7 @@ from sqlalchemy import Column, Integer, String
 from .database import Base
 
 
-class Ads(Base):
+class Ads(Base): # pylint: disable=R0903
     """
     The database model for the table  with all the listings.
     """
@@ -22,7 +22,7 @@ class Ads(Base):
     scraping_date = Column(String, unique=False, index=True)
 
 
-class NewAds(Base):
+class NewAds(Base): # pylint: disable=R0903
     """
     Table containing only the new listings that have been collected.
     """
