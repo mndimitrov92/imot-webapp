@@ -74,9 +74,9 @@ def _build_summary_dict(dataset) -> Counter:
 
 def _save_to_csv(data, filename="export.csv"):
     """
-    It takes a list of objects and converts them to a list of dictionaries, then it converts the list of
-    dictionaries to a pandas dataframe and then it converts the dataframe to a csv file and returns it
-    as a response
+    It takes a list of objects and converts them to a list of dictionaries,
+    then it converts the list of dictionaries to a pandas dataframe and
+    then it converts the dataframe to a csv file and returns it as a response
 
     :param data: the list of ads objects
     :param filename: The name of the file that will be downloaded, defaults to export.csv (optional)
@@ -94,16 +94,16 @@ def _save_to_csv(data, filename="export.csv"):
                         "URL": each_ad.url,
                         "Снимка": each_ad.image,
                         "Намерено на дата": each_ad.scraping_date})
-    df = pd.DataFrame(ad_list)
+    data_frame = pd.DataFrame(ad_list)
     stream = io.StringIO()
-    df.to_csv(stream, index=False)
+    data_frame.to_csv(stream, index=False)
     response = StreamingResponse(iter([stream.getvalue()]),
                                  media_type="text/csv")
     response.headers["Content-Disposition"] = f"attachment; filename={filename}"
     return response
 
 
-def _read_ads(source_name, price, location, home_size,
+def _read_ads(source_name, price, location, home_size, #pylint: disable=R0913
               home_type, limit, db_session, only_new_ads=False):
     filters_list = [source_name, price, home_size, home_type, location]
     filtered = (param for param in filters_list if param is not None)
@@ -122,7 +122,7 @@ def _read_ads(source_name, price, location, home_size,
     return my_ads
 
 
-def _display_ads(request, source_name, price, location,
+def _display_ads(request, source_name, price, location, #pylint: disable=R0913
                  home_size, home_type, limit, db_session, only_new_ads=False):
     # my_ads is a list of Ads objects. The attributes are the db columns
     my_ads = _read_ads(source_name, price, location,
@@ -136,7 +136,7 @@ def _display_ads(request, source_name, price, location,
 
 
 @app.get("/new-ads", response_class=HTMLResponse, response_model=List[schemas.NewAds])
-async def read_new_ads(request: Request,
+async def read_new_ads(request: Request, #pylint: disable=R0913
                        source_name: Optional[constants.AdSource] = None,
                        price: Optional[int] = Query(None, ge=1),
                        location: Optional[constants.AdLocation] = None,
@@ -160,7 +160,7 @@ async def read_new_ads(request: Request,
 
 
 @app.get("/all-ads", response_class=HTMLResponse, response_model=List[schemas.Ads])
-async def read_all_ads(request: Request,
+async def read_all_ads(request: Request, #pylint: disable=R0913
                        source_name: Optional[constants.AdSource] = None,
                        price: Optional[int] = Query(None, ge=1),
                        location: Optional[constants.AdLocation] = None,
@@ -184,7 +184,7 @@ async def read_all_ads(request: Request,
 
 
 @app.get("/download-all-ads", response_model=List[schemas.Ads])
-async def download_all_ads(source_name: Optional[constants.AdSource] = None,
+async def download_all_ads(source_name: Optional[constants.AdSource] = None, #pylint: disable=R0913
                            price: Optional[int] = Query(None, ge=1),
                            location: Optional[constants.AdLocation] = None,
                            home_size: Optional[int] = Query(None, ge=1),
@@ -202,7 +202,7 @@ async def download_all_ads(source_name: Optional[constants.AdSource] = None,
 
 
 @app.get("/download-new-ads", response_model=List[schemas.NewAds])
-async def download_new_ads(source_name: Optional[constants.AdSource] = None,
+async def download_new_ads(source_name: Optional[constants.AdSource] = None, #pylint: disable=R0913
                            price: Optional[int] = Query(None, ge=1),
                            location: Optional[constants.AdLocation] = None,
                            home_size: Optional[int] = Query(None, ge=1),

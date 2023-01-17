@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from . import models
 
 
-def get_filtered_ads(db_session: Session,
+def get_filtered_ads(db_session: Session, #pylint: disable=R0913
                      source_name: str = None,
                      price: int = None,
                      location: str = None,

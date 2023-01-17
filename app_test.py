@@ -89,6 +89,9 @@ Base.metadata.create_all(bind=engine)
 
 
 def override_get_db():
+    """
+    Overrides the original database with the test one
+    """
     try:
         database = TestingSessionLocal()
         yield database
@@ -101,6 +104,9 @@ client = TestClient(app)
 
 
 def populate_test_db():
+    """
+    Helper method to populate the test database
+    """
     conn = generate_test_db.create_connection(TEST_DB_URL)
     with conn:
         # Add entries
@@ -113,12 +119,15 @@ def populate_test_db():
 
 # Module level setup and teardown, executed once at the beginnning and end of the module
 def setup_module():
-    """ setup any state specific to the execution of the given module."""
+    """
+    setup any state specific to the execution of the given module.
+    """
     populate_test_db()
 
 
 def teardown_module():
-    """teardown any state that was previously setup with a setup_module
+    """
+    teardown any state that was previously setup with a setup_module
     method.
     """
     if os.path.exists(TEST_DB_URL):
@@ -169,7 +178,8 @@ class TestBasicAppEndpoints():
         response = client.get("/download-new-ads")
         assert response.is_success
         with pytest.raises(AttributeError):
-            response.template.name
+            # Should not have such an attribute
+            response.template.name  # pylint: disable=W0104
 
     def test_download_all_ads_endpoint(self):
         """
@@ -178,7 +188,8 @@ class TestBasicAppEndpoints():
         response = client.get("/download-all-ads")
         assert response.is_success
         with pytest.raises(AttributeError):
-            response.template.name
+            # Should not have such an attribute
+            response.template.name  # pylint: disable=W0104
 
 
 # The all-ads and new-ads endpoind behave the same way as their download counterparts.
@@ -202,7 +213,8 @@ class TestDownloadNewAds:
         Showing the data without filters should be sorted.
         """
         response = client.get(f"/{self.endpoint}")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 4,addressbg,57644,Младост 4,142,Едностаен,https://addressbg.bg/66,some_image,SOME_DATE
 6,superimoti,61497,Илинден,193,Студио,https://superimoti.bg/66,some_image,SOME_DATE
 7,bezkomisiona,98228,Овча купел 2,99,Тристаен,https://bezkomisiona.bg/30,some_image,SOME_DATE
@@ -234,46 +246,53 @@ class TestDownloadNewAds:
 13,ues,296825,Люлин 9,88,Многостаен,https://ues.bg/35,some_image,SOME_DATE
 25,yavlena,299179,Дървеница,120,Мезонет,https://yavlena.bg/11,some_image,SOME_DATE
 """
-        assert response.text.replace("\r", "") == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_read_with_limit(self):
+        """
+        Test data filtering based on the limit query parameter
+        """
         response = client.get(f"/{self.endpoint}?limit=2")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 4,addressbg,57644,Младост 4,142,Едностаен,https://addressbg.bg/66,some_image,SOME_DATE
 6,superimoti,61497,Илинден,193,Студио,https://superimoti.bg/66,some_image,SOME_DATE
 """
-        assert response.text.replace("\r", "") == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_location_filter(self):
         """
         Test data filtering based on the location query parameter
         """
         response = client.get(f"/{self.endpoint}?location=Младост 4")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 4,addressbg,57644,Младост 4,142,Едностаен,https://addressbg.bg/66,some_image,SOME_DATE
 """
-        assert response.text.replace("\r", "") == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_price_filter(self):
         """
         Test data filtering based on the price query parameter
         """
         response = client.get(f"/{self.endpoint}?price=100000")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 4,addressbg,57644,Младост 4,142,Едностаен,https://addressbg.bg/66,some_image,SOME_DATE
 6,superimoti,61497,Илинден,193,Студио,https://superimoti.bg/66,some_image,SOME_DATE
 7,bezkomisiona,98228,Овча купел 2,99,Тристаен,https://bezkomisiona.bg/30,some_image,SOME_DATE
 29,imotbg,98807,Белите Брези,106,Едностаен,https://imotbg.bg/87,some_image,SOME_DATE
 18,superimoti,98964,Димитър Миленков,123,Многостаен,https://superimoti.bg/77,some_image,SOME_DATE
 """
-        assert response.text.replace("\r", "") == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_size_filter(self):
         """
         Test data filtering based on the home_size query parameter
         """
         response = client.get(f"/{self.endpoint}?home_size=100")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 29,imotbg,98807,Белите Брези,106,Едностаен,https://imotbg.bg/87,some_image,SOME_DATE
 30,novdom1,255456,Зона Б-5-3,111,Мезонет,https://novdom1.bg/74,some_image,SOME_DATE
 25,yavlena,299179,Дървеница,120,Мезонет,https://yavlena.bg/11,some_image,SOME_DATE
@@ -294,14 +313,15 @@ class TestDownloadNewAds:
 3,superimoti,210395,Горубляне,195,Двустаен,https://superimoti.bg/64,some_image,SOME_DATE
 27,home2u,268885,Градина,199,Двустаен,https://home2u.bg/83,some_image,SOME_DATE
 """
-        assert response.text.replace("\r", "") == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_source_filter(self):
         """
         Test data filtering based on the source_name query parameter
         """
         response = client.get(f"/{self.endpoint}?source_name=bezkomisiona")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 2,bezkomisiona,170294,Слатина,185,Мезонет,https://bezkomisiona.bg/61,some_image,SOME_DATE
 7,bezkomisiona,98228,Овча купел 2,99,Тристаен,https://bezkomisiona.bg/30,some_image,SOME_DATE
 8,bezkomisiona,289343,Люлин,68,Студио,https://bezkomisiona.bg/57,some_image,SOME_DATE
@@ -309,21 +329,22 @@ class TestDownloadNewAds:
 24,bezkomisiona,237987,Люлин 6,72,Многостаен,https://bezkomisiona.bg/29,some_image,SOME_DATE
 """
 
-        assert response.text.replace("\r", "") == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_type_filter(self):
         """
         Test data filtering based on the home_type query parameter
         """
         response = client.get(f"/{self.endpoint}?home_type=Двустаен")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 1,luximmo,246483,Люлин 3,84,Двустаен,https://luximmo.bg/23,some_image,SOME_DATE
 3,superimoti,210395,Горубляне,195,Двустаен,https://superimoti.bg/64,some_image,SOME_DATE
 5,avista,216479,Младост 2,125,Двустаен,https://avista.bg/96,some_image,SOME_DATE
 11,arcoreal,234161,Връбница 2,81,Двустаен,https://arcoreal.bg/25,some_image,SOME_DATE
 27,home2u,268885,Градина,199,Двустаен,https://home2u.bg/83,some_image,SOME_DATE
 """
-        assert response.text.replace("\r", "") == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_combo_filters(self):
         """
@@ -331,38 +352,22 @@ class TestDownloadNewAds:
         """
         response = client.get(
             f"/{self.endpoint}?home_type=Двустаен&source_name=home2u")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 27,home2u,268885,Градина,199,Двустаен,https://home2u.bg/83,some_image,SOME_DATE"""
-        assert response.text.replace("\r", "").strip() == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_all_filters_applied(self):
         """
         Test data filtering when all query parameters are added
         """
+        other_params = "home_type=Многостаен&price=300000&home_size=70&location=Младост 1A"
         response = client.get(
-            f"/{self.endpoint}?source_name=bezkomisiona&home_type=Многостаен&price=300000&home_size=70&location=Младост 1A")
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+            f"/{self.endpoint}?source_name=bezkomisiona&{other_params}")
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 15,bezkomisiona,280778,Младост 1A,193,Многостаен,https://bezkomisiona.bg/46,some_image,SOME_DATE"""
-        assert response.text.replace("\r", "").strip() == expected
-
-    # Multiple values for a query parameter
-    def test_multiple_locations(self):
-        """
-        Test data filtering with multiple locations passed
-        """
-        pass
-
-    def test_multiple_sources(self):
-        """
-        Test data filtering with multiple sources passed
-        """
-        pass
-
-    def test_multiple_types(self):
-        """
-        Test data filtering with multiple home_types passed
-        """
-        pass
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     # Bad weather testcases
     def test_invalid_query_parameter(self):
@@ -372,7 +377,8 @@ class TestDownloadNewAds:
         """
         response = client.get(f"/{self.endpoint}?locc=Младост 1D")
         # invalid query parameter returns all listings
-        expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
+        expected = """
+id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 4,addressbg,57644,Младост 4,142,Едностаен,https://addressbg.bg/66,some_image,SOME_DATE
 6,superimoti,61497,Илинден,193,Студио,https://superimoti.bg/66,some_image,SOME_DATE
 7,bezkomisiona,98228,Овча купел 2,99,Тристаен,https://bezkomisiona.bg/30,some_image,SOME_DATE
@@ -405,7 +411,7 @@ class TestDownloadNewAds:
 25,yavlena,299179,Дървеница,120,Мезонет,https://yavlena.bg/11,some_image,SOME_DATE
 """
         assert response.is_success
-        assert response.text.replace("\r", "") == expected
+        assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_invalid_location_filter(self):
         """
@@ -444,10 +450,12 @@ class TestDownloadNewAds:
 
     def test_all_filters_invalid_location(self):
         """
-        Invalid location filter passed along with all other all other correct parameters should an return error and an invalid response
+        Invalid location filter passed along with all other all other correct parameters should
+        an return error and an invalid response
         """
+        other_params = "home_type=Многостаен&price=300000&home_size=70&location=Младост 1D"
         response = client.get(
-            f"/{self.endpoint}?source_name=bezkomisiona&home_type=Многостаен&price=300000&home_size=70&location=Младост 1D")
+            f"/{self.endpoint}?source_name=bezkomisiona&{other_params}")
         assert not response.is_success
 
 
