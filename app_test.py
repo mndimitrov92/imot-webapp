@@ -16,36 +16,66 @@ import generate_test_db
 DATABASE_URL = "sqlite:///./test.db"
 TEST_DB_URL = os.path.join(os.getcwd(), "test.db")
 DB_TEST_ENTRIES = [
-    ('luximmo', 'https://luximmo.bg/23', 246483, 'Двустаен', 84, 'Люлин 3', 'some_image', 'SOME_DATE'),
-    ('bezkomisiona', 'https://bezkomisiona.bg/61', 170294, 'Мезонет', 185, 'Слатина', 'some_image', 'SOME_DATE'),
-    ('superimoti', 'https://superimoti.bg/64', 210395, 'Двустаен', 195, 'Горубляне', 'some_image', 'SOME_DATE'),
-    ('addressbg', 'https://addressbg.bg/66', 57644, 'Едностаен', 142, 'Младост 4', 'some_image', 'SOME_DATE'),
-    ('avista', 'https://avista.bg/96', 216479, 'Двустаен', 125, 'Младост 2', 'some_image', 'SOME_DATE'),
-    ('superimoti', 'https://superimoti.bg/66', 61497, 'Студио', 193, 'Илинден', 'some_image', 'SOME_DATE'),
-    ('bezkomisiona', 'https://bezkomisiona.bg/30', 98228, 'Тристаен', 99, 'Овча купел 2', 'some_image', 'SOME_DATE'),
-    ('bezkomisiona', 'https://bezkomisiona.bg/57', 289343, 'Студио', 68, 'Люлин', 'some_image', 'SOME_DATE'),
-    ('era', 'https://era.bg/69', 131733, 'Мезонет', 163, 'Света троица', 'some_image', 'SOME_DATE'),
-    ('ues', 'https://ues.bg/80', 177669, 'Мезонет', 192, 'Обеля 2', 'some_image', 'SOME_DATE'),
-    ('arcoreal', 'https://arcoreal.bg/25', 234161, 'Двустаен', 81, 'Връбница 2', 'some_image', 'SOME_DATE'),
-    ('mirelabg', 'https://mirelabg.bg/76', 232870, 'Мезонет', 155, 'Левски', 'some_image', 'SOME_DATE'),
-    ('ues', 'https://ues.bg/35', 296825, 'Многостаен', 88, 'Люлин 9', 'some_image', 'SOME_DATE'),
-    ('addressbg', 'https://addressbg.bg/61', 126041, 'Мезонет', 94, 'Център', 'some_image', 'SOME_DATE'),
-    ('bezkomisiona', 'https://bezkomisiona.bg/46', 280778, 'Многостаен', 193, 'Младост 1A', 'some_image', 'SOME_DATE'),
-    ('yavlena', 'https://yavlena.bg/97', 282492, 'Студио', 56, 'Славия', 'some_image', 'SOME_DATE'),
-    ('avista', 'https://avista.bg/14', 293794, 'Едностаен', 75, 'Република 2', 'some_image', 'SOME_DATE'),
-    ('superimoti', 'https://superimoti.bg/77', 98964, 'Многостаен', 123, 'Димитър Миленков', 'some_image', 'SOME_DATE'),
-    ('home2u', 'https://home2u.bg/64', 173626, 'Тристаен', 61, 'Хиподрума', 'some_image', 'SOME_DATE'),
-    ('era', 'https://era.bg/30', 242059, 'Едностаен', 127, 'Стрелбище', 'some_image', 'SOME_DATE'),
-    ('galardo', 'https://galardo.bg/49', 215036, 'Едностаен', 172, 'Дружба 2', 'some_image', 'SOME_DATE'),
-    ('yourhome', 'https://yourhome.bg/83', 295392, 'Многостаен', 97, 'Овча купел 1', 'some_image', 'SOME_DATE'),
-    ('bulgarianproperties', 'https://bulgarianproperties.bg/10', 193864, 'Мезонет', 123, 'Света троица', 'some_image', 'SOME_DATE'),
-    ('bezkomisiona', 'https://bezkomisiona.bg/29', 237987, 'Многостаен', 72, 'Люлин 6', 'some_image', 'SOME_DATE'),
-    ('yavlena', 'https://yavlena.bg/11', 299179, 'Мезонет', 120, 'Дървеница', 'some_image', 'SOME_DATE'),
-    ('luximmo', 'https://luximmo.bg/45', 192682, 'Едностаен', 166, 'Банишора', 'some_image', 'SOME_DATE'),
-    ('home2u', 'https://home2u.bg/83', 268885, 'Двустаен', 199, 'Градина', 'some_image', 'SOME_DATE'),
-    ('home2u', 'https://home2u.bg/20', 240912, 'Мезонет', 156, 'Експериментален', 'some_image', 'SOME_DATE'),
-    ('imotbg', 'https://imotbg.bg/87', 98807, 'Едностаен', 106, 'Белите Брези', 'some_image', 'SOME_DATE'),
-    ('novdom1', 'https://novdom1.bg/74', 255456, 'Мезонет', 111, 'Зона Б-5-3', 'some_image', 'SOME_DATE'),
+    ('luximmo', 'https://luximmo.bg/23', 246483,
+     'Двустаен', 84, 'Люлин 3', 'some_image', 'SOME_DATE'),
+    ('bezkomisiona', 'https://bezkomisiona.bg/61', 170294,
+     'Мезонет', 185, 'Слатина', 'some_image', 'SOME_DATE'),
+    ('superimoti', 'https://superimoti.bg/64', 210395,
+     'Двустаен', 195, 'Горубляне', 'some_image', 'SOME_DATE'),
+    ('addressbg', 'https://addressbg.bg/66', 57644,
+     'Едностаен', 142, 'Младост 4', 'some_image', 'SOME_DATE'),
+    ('avista', 'https://avista.bg/96', 216479, 'Двустаен',
+     125, 'Младост 2', 'some_image', 'SOME_DATE'),
+    ('superimoti', 'https://superimoti.bg/66', 61497,
+     'Студио', 193, 'Илинден', 'some_image', 'SOME_DATE'),
+    ('bezkomisiona', 'https://bezkomisiona.bg/30', 98228,
+     'Тристаен', 99, 'Овча купел 2', 'some_image', 'SOME_DATE'),
+    ('bezkomisiona', 'https://bezkomisiona.bg/57', 289343,
+     'Студио', 68, 'Люлин', 'some_image', 'SOME_DATE'),
+    ('era', 'https://era.bg/69', 131733, 'Мезонет',
+     163, 'Света троица', 'some_image', 'SOME_DATE'),
+    ('ues', 'https://ues.bg/80', 177669, 'Мезонет',
+     192, 'Обеля 2', 'some_image', 'SOME_DATE'),
+    ('arcoreal', 'https://arcoreal.bg/25', 234161,
+     'Двустаен', 81, 'Връбница 2', 'some_image', 'SOME_DATE'),
+    ('mirelabg', 'https://mirelabg.bg/76', 232870,
+     'Мезонет', 155, 'Левски', 'some_image', 'SOME_DATE'),
+    ('ues', 'https://ues.bg/35', 296825, 'Многостаен',
+     88, 'Люлин 9', 'some_image', 'SOME_DATE'),
+    ('addressbg', 'https://addressbg.bg/61', 126041,
+     'Мезонет', 94, 'Център', 'some_image', 'SOME_DATE'),
+    ('bezkomisiona', 'https://bezkomisiona.bg/46', 280778,
+     'Многостаен', 193, 'Младост 1A', 'some_image', 'SOME_DATE'),
+    ('yavlena', 'https://yavlena.bg/97', 282492,
+     'Студио', 56, 'Славия', 'some_image', 'SOME_DATE'),
+    ('avista', 'https://avista.bg/14', 293794, 'Едностаен',
+     75, 'Република 2', 'some_image', 'SOME_DATE'),
+    ('superimoti', 'https://superimoti.bg/77', 98964, 'Многостаен',
+     123, 'Димитър Миленков', 'some_image', 'SOME_DATE'),
+    ('home2u', 'https://home2u.bg/64', 173626, 'Тристаен',
+     61, 'Хиподрума', 'some_image', 'SOME_DATE'),
+    ('era', 'https://era.bg/30', 242059, 'Едностаен',
+     127, 'Стрелбище', 'some_image', 'SOME_DATE'),
+    ('galardo', 'https://galardo.bg/49', 215036, 'Едностаен',
+     172, 'Дружба 2', 'some_image', 'SOME_DATE'),
+    ('yourhome', 'https://yourhome.bg/83', 295392, 'Многостаен',
+     97, 'Овча купел 1', 'some_image', 'SOME_DATE'),
+    ('bulgarianproperties', 'https://bulgarianproperties.bg/10',
+     193864, 'Мезонет', 123, 'Света троица', 'some_image', 'SOME_DATE'),
+    ('bezkomisiona', 'https://bezkomisiona.bg/29', 237987,
+     'Многостаен', 72, 'Люлин 6', 'some_image', 'SOME_DATE'),
+    ('yavlena', 'https://yavlena.bg/11', 299179, 'Мезонет',
+     120, 'Дървеница', 'some_image', 'SOME_DATE'),
+    ('luximmo', 'https://luximmo.bg/45', 192682, 'Едностаен',
+     166, 'Банишора', 'some_image', 'SOME_DATE'),
+    ('home2u', 'https://home2u.bg/83', 268885, 'Двустаен',
+     199, 'Градина', 'some_image', 'SOME_DATE'),
+    ('home2u', 'https://home2u.bg/20', 240912, 'Мезонет',
+     156, 'Експериментален', 'some_image', 'SOME_DATE'),
+    ('imotbg', 'https://imotbg.bg/87', 98807, 'Едностаен',
+     106, 'Белите Брези', 'some_image', 'SOME_DATE'),
+    ('novdom1', 'https://novdom1.bg/74', 255456, 'Мезонет',
+     111, 'Зона Б-5-3', 'some_image', 'SOME_DATE'),
 ]
 
 engine = create_engine(DATABASE_URL,
@@ -75,15 +105,17 @@ def populate_test_db():
     with conn:
         # Add entries
         for entry in DB_TEST_ENTRIES:
-            generate_test_db.add_entry(conn, generate_test_db.Tables.NEW_ADS.value ,entry)
-            generate_test_db.add_entry(conn, generate_test_db.Tables.ADS.value ,entry)
-
+            generate_test_db.add_entry(
+                conn, generate_test_db.Tables.NEW_ADS.value, entry)
+            generate_test_db.add_entry(
+                conn, generate_test_db.Tables.ADS.value, entry)
 
 
 # Module level setup and teardown, executed once at the beginnning and end of the module
 def setup_module(module):
     """ setup any state specific to the execution of the given module."""
     populate_test_db()
+
 
 def teardown_module(module):
     """teardown any state that was previously setup with a setup_module
@@ -136,6 +168,7 @@ class TestNewAds:
     Test cases for the query parameters of the new-ads endpoint.
     """
     # Good weather
+
     def test_read_no_filters(self):
         """
         Showing the data without filters should be sorted.
@@ -335,13 +368,15 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "") == expected
 
     def test_combo_filters(self):
-        response = client.get(f"/{self.endpoint}?home_type=Двустаен&source_name=home2u")
+        response = client.get(
+            f"/{self.endpoint}?home_type=Двустаен&source_name=home2u")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 27,home2u,268885,Градина,199,Двустаен,https://home2u.bg/83,some_image,SOME_DATE"""
         assert response.text.replace("\r", "").strip() == expected
 
     def test_all_filters_applied(self):
-        response = client.get(f"/{self.endpoint}?source_name=bezkomisiona&home_type=Многостаен&price=300000&home_size=70&location=Младост 1A")
+        response = client.get(
+            f"/{self.endpoint}?source_name=bezkomisiona&home_type=Многостаен&price=300000&home_size=70&location=Младост 1A")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 15,bezkomisiona,280778,Младост 1A,193,Многостаен,https://bezkomisiona.bg/46,some_image,SOME_DATE"""
         assert response.text.replace("\r", "").strip() == expected
@@ -416,7 +451,8 @@ class TestDownloadNewAds:
         assert not response.is_success
 
     def test_all_filters_invalid_location(self):
-        response = client.get(f"/{self.endpoint}?source_name=bezkomisiona&home_type=Многостаен&price=300000&home_size=70&location=Младост 1D")
+        response = client.get(
+            f"/{self.endpoint}?source_name=bezkomisiona&home_type=Многостаен&price=300000&home_size=70&location=Младост 1D")
         assert not response.is_success
 
 
