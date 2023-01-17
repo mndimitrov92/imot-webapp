@@ -112,12 +112,12 @@ def populate_test_db():
 
 
 # Module level setup and teardown, executed once at the beginnning and end of the module
-def setup_module(module):
+def setup_module():
     """ setup any state specific to the execution of the given module."""
     populate_test_db()
 
 
-def teardown_module(module):
+def teardown_module():
     """teardown any state that was previously setup with a setup_module
     method.
     """
@@ -131,32 +131,50 @@ class TestBasicAppEndpoints():
     """
 
     def test_default_endpoint(self):
+        """
+        Test that the start page endpoint is accessible
+        """
         response = client.get("/")
         assert response.is_success
         assert response.template.name == "index.html"
 
     def test_data_endpoint(self):
+        """
+        Test that the data page endpoint is accessible
+        """
         response = client.get("/data")
         assert response.is_success
         assert response.template.name == "data.html"
 
     def test_new_ads_endpoint(self):
+        """
+        Test that the new-ads page endpoint is accessible
+        """
         response = client.get("/new-ads")
         assert response.is_success
         assert response.template.name == "ads.html"
 
     def test_all_ads_endpoint(self):
+        """
+        Test that the all-ads page endpoint is accessible
+        """
         response = client.get("all-ads")
         assert response.is_success
         assert response.template.name == "ads.html"
 
     def test_download_new_ads_endpoint(self):
+        """
+        Test that the download-new-ads page endpoint is accessible
+        """
         response = client.get("/download-new-ads")
         assert response.is_success
         with pytest.raises(AttributeError):
             response.template.name
 
     def test_download_all_ads_endpoint(self):
+        """
+        Test that the download-all-ads page endpoint is accessible
+        """
         response = client.get("/download-all-ads")
         assert response.is_success
         with pytest.raises(AttributeError):
@@ -173,7 +191,8 @@ class TestDownloadNewAds:
 
     @classmethod
     def setup_class(cls):
-        """setup any state specific to the execution of the given class (which
+        """
+        setup any state specific to the execution of the given class (which
         usually contains tests).
         """
         cls.endpoint = "download-new-ads"
@@ -226,6 +245,9 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "") == expected
 
     def test_location_filter(self):
+        """
+        Test data filtering based on the location query parameter
+        """
         response = client.get(f"/{self.endpoint}?location=Младост 4")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 4,addressbg,57644,Младост 4,142,Едностаен,https://addressbg.bg/66,some_image,SOME_DATE
@@ -233,6 +255,9 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "") == expected
 
     def test_price_filter(self):
+        """
+        Test data filtering based on the price query parameter
+        """
         response = client.get(f"/{self.endpoint}?price=100000")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 4,addressbg,57644,Младост 4,142,Едностаен,https://addressbg.bg/66,some_image,SOME_DATE
@@ -244,6 +269,9 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "") == expected
 
     def test_size_filter(self):
+        """
+        Test data filtering based on the home_size query parameter
+        """
         response = client.get(f"/{self.endpoint}?home_size=100")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 29,imotbg,98807,Белите Брези,106,Едностаен,https://imotbg.bg/87,some_image,SOME_DATE
@@ -269,6 +297,9 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "") == expected
 
     def test_source_filter(self):
+        """
+        Test data filtering based on the source_name query parameter
+        """
         response = client.get(f"/{self.endpoint}?source_name=bezkomisiona")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 2,bezkomisiona,170294,Слатина,185,Мезонет,https://bezkomisiona.bg/61,some_image,SOME_DATE
@@ -281,6 +312,9 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "") == expected
 
     def test_type_filter(self):
+        """
+        Test data filtering based on the home_type query parameter
+        """
         response = client.get(f"/{self.endpoint}?home_type=Двустаен")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
 1,luximmo,246483,Люлин 3,84,Двустаен,https://luximmo.bg/23,some_image,SOME_DATE
@@ -292,6 +326,9 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "") == expected
 
     def test_combo_filters(self):
+        """
+        Test data filtering based on the multiple query parameters
+        """
         response = client.get(
             f"/{self.endpoint}?home_type=Двустаен&source_name=home2u")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
@@ -299,6 +336,9 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "").strip() == expected
 
     def test_all_filters_applied(self):
+        """
+        Test data filtering when all query parameters are added
+        """
         response = client.get(
             f"/{self.endpoint}?source_name=bezkomisiona&home_type=Многостаен&price=300000&home_size=70&location=Младост 1A")
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
@@ -307,16 +347,29 @@ class TestDownloadNewAds:
 
     # Multiple values for a query parameter
     def test_multiple_locations(self):
+        """
+        Test data filtering with multiple locations passed
+        """
         pass
 
     def test_multiple_sources(self):
+        """
+        Test data filtering with multiple sources passed
+        """
         pass
 
     def test_multiple_types(self):
+        """
+        Test data filtering with multiple home_types passed
+        """
         pass
 
     # Bad weather testcases
     def test_invalid_query_parameter(self):
+        """
+        Test data filtering with invalid parameter passed.
+        Should return all listings
+        """
         response = client.get(f"/{self.endpoint}?locc=Младост 1D")
         # invalid query parameter returns all listings
         expected = """id,Свалено от,Цена,Квартал,Големина в кв.м.,Тип на имота,URL,Снимка,Намерено на дата
@@ -355,26 +408,44 @@ class TestDownloadNewAds:
         assert response.text.replace("\r", "") == expected
 
     def test_invalid_location_filter(self):
+        """
+        Invalid location filter passed should return an error and invalid response
+        """
         response = client.get(f"/{self.endpoint}?location=Младост 1D")
         assert not response.is_success
 
     def test_invalid_source_filter(self):
+        """
+        Invalid source filter passed should return an error and invalid response
+        """
         response = client.get(f"/{self.endpoint}?source_name=invalid")
         assert not response.is_success
 
     def test_invalid_type_filter(self):
+        """
+        Invalid home_type filter passed should return an error and invalid response
+        """
         response = client.get(f"/{self.endpoint}?home_type=Dvustaen")
         assert not response.is_success
 
     def test_invalid_size_filter(self):
+        """
+        Invalid home_size filter passed should return an error and invalid response
+        """
         response = client.get(f"/{self.endpoint}?home_size=big")
         assert not response.is_success
 
     def test_invalid_price_filter(self):
+        """
+        Invalid price filter passed should return an error and invalid response
+        """
         response = client.get(f"/{self.endpoint}?price=123d")
         assert not response.is_success
 
     def test_all_filters_invalid_location(self):
+        """
+        Invalid location filter passed along with all other all other correct parameters should an return error and an invalid response
+        """
         response = client.get(
             f"/{self.endpoint}?source_name=bezkomisiona&home_type=Многостаен&price=300000&home_size=70&location=Младост 1D")
         assert not response.is_success
