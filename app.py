@@ -3,11 +3,13 @@ Main app module.
 Initializes the application and starts the uvicorn server.
 """
 from collections import defaultdict, Counter
+import io
 from typing import Optional, List
 from fastapi import FastAPI, Request, Query, Depends
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+import pandas as pd
 from sqlalchemy.orm import Session
 import uvicorn
 
@@ -68,6 +70,37 @@ def _build_summary_dict(dataset) -> Counter:
     source_counter = Counter(sources)
     all_sources.update(source_counter)
     return all_sources
+
+
+def _save_to_csv(data, filename="export.csv"):
+    """
+    It takes a list of objects and converts them to a list of dictionaries, then it converts the list of
+    dictionaries to a pandas dataframe and then it converts the dataframe to a csv file and returns it
+    as a response
+
+    :param data: the list of ads objects
+    :param filename: The name of the file that will be downloaded, defaults to export.csv (optional)
+    :return: A StreamingResponse object.
+    """
+    # Convert the ads objects to a list of regular dictionaries and remove unneccesary keys
+    ad_list = []
+    for each_ad in data:
+        ad_list.append({"id": each_ad.id,
+                        "Свалено от": each_ad.source_name,
+                        "Цена": each_ad.price,
+                        "Квартал": each_ad.location,
+                        "Големина в кв.м.": each_ad.home_size,
+                        "Тип на имота": each_ad.home_type,
+                        "URL": each_ad.url,
+                        "Снимка": each_ad.image,
+                        "Намерено на дата": each_ad.scraping_date})
+    df = pd.DataFrame(ad_list)
+    stream = io.StringIO()
+    df.to_csv(stream, index=False)
+    response = StreamingResponse(iter([stream.getvalue()]),
+                                 media_type="text/csv")
+    response.headers["Content-Disposition"] = f"attachment; filename={filename}"
+    return response
 
 
 def _read_ads(source_name, price, location, home_size,
@@ -165,7 +198,7 @@ async def download_all_ads(source_name: Optional[constants.AdSource] = None,
     """
     my_ads = _read_ads(source_name, price, location, home_size,
                        home_type, limit, db_session, only_new_ads=False)
-    return my_ads
+    return _save_to_csv(my_ads)
 
 
 @app.get("/download-new-ads", response_model=List[schemas.NewAds])
@@ -183,7 +216,7 @@ async def download_new_ads(source_name: Optional[constants.AdSource] = None,
     """
     my_ads = _read_ads(source_name, price, location, home_size,
                        home_type, limit, db_session, only_new_ads=True)
-    return my_ads
+    return _save_to_csv(my_ads)
 
 
 @app.get("/data", response_class=HTMLResponse)
