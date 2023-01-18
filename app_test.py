@@ -9,6 +9,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from db_utils.database import Base
+from utils import create_db_folder
 from app import app, get_db
 import generate_test_db
 
@@ -84,7 +85,7 @@ TestingSessionLocal = sessionmaker(autocommit=False,
                                    autoflush=False,
                                    bind=engine)
 
-
+create_db_folder()
 Base.metadata.create_all(bind=engine)
 
 

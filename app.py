@@ -15,15 +15,15 @@ import uvicorn
 
 from db_utils import models, crud, schemas
 from db_utils.database import SessionLocal, engine
-from utils import constants, helpers
+from utils import constants, create_db_folder
 
 
-# build the database
+# prepare directory and build the database
+create_db_folder()
 models.Base.metadata.create_all(bind=engine)
 
+
 # Dependency
-
-
 def get_db():
     """
     It creates a database connection, and then yields it to the caller.
@@ -103,7 +103,7 @@ def _save_to_csv(data, filename="export.csv"):
     return response
 
 
-def _read_ads(source_name, price, location, home_size, #pylint: disable=R0913
+def _read_ads(source_name, price, location, home_size,  # pylint: disable=R0913
               home_type, limit, db_session, only_new_ads=False):
     filters_list = [source_name, price, home_size, home_type, location]
     filtered = (param for param in filters_list if param is not None)
@@ -122,7 +122,7 @@ def _read_ads(source_name, price, location, home_size, #pylint: disable=R0913
     return my_ads
 
 
-def _display_ads(request, source_name, price, location, #pylint: disable=R0913
+def _display_ads(request, source_name, price, location,  # pylint: disable=R0913
                  home_size, home_type, limit, db_session, only_new_ads=False):
     # my_ads is a list of Ads objects. The attributes are the db columns
     my_ads = _read_ads(source_name, price, location,
@@ -136,7 +136,7 @@ def _display_ads(request, source_name, price, location, #pylint: disable=R0913
 
 
 @app.get("/new-ads", response_class=HTMLResponse, response_model=List[schemas.NewAds])
-async def read_new_ads(request: Request, #pylint: disable=R0913
+async def read_new_ads(request: Request,  # pylint: disable=R0913
                        source_name: Optional[constants.AdSource] = None,
                        price: Optional[int] = Query(None, ge=1),
                        location: Optional[constants.AdLocation] = None,
@@ -160,7 +160,7 @@ async def read_new_ads(request: Request, #pylint: disable=R0913
 
 
 @app.get("/all-ads", response_class=HTMLResponse, response_model=List[schemas.Ads])
-async def read_all_ads(request: Request, #pylint: disable=R0913
+async def read_all_ads(request: Request,  # pylint: disable=R0913
                        source_name: Optional[constants.AdSource] = None,
                        price: Optional[int] = Query(None, ge=1),
                        location: Optional[constants.AdLocation] = None,
@@ -184,7 +184,7 @@ async def read_all_ads(request: Request, #pylint: disable=R0913
 
 
 @app.get("/download-all-ads", response_model=List[schemas.Ads])
-async def download_all_ads(source_name: Optional[constants.AdSource] = None, #pylint: disable=R0913
+async def download_all_ads(source_name: Optional[constants.AdSource] = None,  # pylint: disable=R0913
                            price: Optional[int] = Query(None, ge=1),
                            location: Optional[constants.AdLocation] = None,
                            home_size: Optional[int] = Query(None, ge=1),
@@ -202,7 +202,7 @@ async def download_all_ads(source_name: Optional[constants.AdSource] = None, #py
 
 
 @app.get("/download-new-ads", response_model=List[schemas.NewAds])
-async def download_new_ads(source_name: Optional[constants.AdSource] = None, #pylint: disable=R0913
+async def download_new_ads(source_name: Optional[constants.AdSource] = None,  # pylint: disable=R0913
                            price: Optional[int] = Query(None, ge=1),
                            location: Optional[constants.AdLocation] = None,
                            home_size: Optional[int] = Query(None, ge=1),
@@ -236,7 +236,6 @@ def run():
     It starts a server on port 8000, and when you go to the URL http://localhost:8000/docs,
     it will show you the documentation for the API
     """
-    helpers.create_db_folder()
     config = uvicorn.Config("app:app", port=8000, log_level="info")
     server = uvicorn.Server(config)
     server.run()
