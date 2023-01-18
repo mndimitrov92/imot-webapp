@@ -194,6 +194,189 @@ class TestBasicAppEndpoints():
 
 # The all-ads and new-ads endpoind behave the same way as their download counterparts.
 # They just show the content in an HTML response format instead of csv
+# basic tests will be enough to show the correct numbers and behavior is present
+class TestNewAds:
+    """
+    Test cases covering the behaviour of the new-ads end point
+    """
+
+    @classmethod
+    def setup_class(cls):
+        """
+        setup any state specific to the execution of the given class (which
+        usually contains tests).
+        """
+        cls.endpoint = "new-ads"
+
+    def _verify_endpoint(self, response, expected_listings):
+        """
+        Utility method to perform the needed assertions
+        """
+        ad_list_len = len(response.context['ad_list'])
+        show_summary = response.context['show_summary']
+        summary_data = response.context['summary_data']
+        assert response.is_success
+        assert show_summary
+        assert ad_list_len == expected_listings
+        assert sum(summary_data.values()) == ad_list_len
+
+    def _verify_invalid_endpoint_params(self, response):
+        """
+        Utility method to verify the behaviour of the endpoint with invalid params.
+        """
+        assert not response.is_success
+        assert response.is_error
+        assert response.is_client_error
+        assert response.status_code == 422
+        assert response.reason_phrase == "Unprocessable Entity"
+
+    def test_read_no_filters(self):
+        """
+        Showing the data without filters should be sorted.
+        """
+        response = client.get(f"/{self.endpoint}")
+        self._verify_endpoint(response, expected_listings=len(DB_TEST_ENTRIES))
+
+    def test_read_with_limit(self):
+        """
+        Test data filtering based on the limit query parameter
+        """
+        response = client.get(f"/{self.endpoint}?limit=2")
+        self._verify_endpoint(response, expected_listings=2)
+
+    def test_location_filter(self):
+        """
+        Test data filtering based on the location query parameter
+        """
+        response = client.get(f"/{self.endpoint}?location=Младост 4")
+        self._verify_endpoint(response, expected_listings=1)
+
+    def test_price_filter(self):
+        """
+        Test data filtering based on the price query parameter
+        """
+        response = client.get(f"/{self.endpoint}?price=100000")
+        self._verify_endpoint(response, expected_listings=5)
+
+    def test_size_filter(self):
+        """
+        Test data filtering based on the home_size query parameter
+        """
+        response = client.get(f"/{self.endpoint}?home_size=100")
+        self._verify_endpoint(response, expected_listings=19)
+
+    def test_source_filter(self):
+        """
+        Test data filtering based on the source_name query parameter
+        """
+        response = client.get(f"/{self.endpoint}?source_name=bezkomisiona")
+        self._verify_endpoint(response, expected_listings=5)
+
+    def test_type_filter(self):
+        """
+        Test data filtering based on the home_type query parameter
+        """
+        response = client.get(f"/{self.endpoint}?home_type=Двустаен")
+        self._verify_endpoint(response, expected_listings=5)
+
+    def test_combo_filters(self):
+        """
+        Test data filtering based on the multiple query parameters
+        """
+        response = client.get(
+            f"/{self.endpoint}?home_type=Двустаен&source_name=home2u")
+        self._verify_endpoint(response, expected_listings=1)
+
+    def test_all_filters_applied(self):
+        """
+        Test data filtering when all query parameters are added
+        """
+        other_params = "home_type=Многостаен&price=300000&home_size=70&location=Младост 1A"
+        response = client.get(
+            f"/{self.endpoint}?source_name=bezkomisiona&{other_params}")
+        self._verify_endpoint(response, expected_listings=1)
+
+    # Bad weather testcases
+    def test_invalid_query_parameter(self):
+        """
+        Test data filtering with invalid parameter passed.
+        """
+        response = client.get(f"/{self.endpoint}?locc=Младост 1D")
+        self._verify_endpoint(response, expected_listings=len(DB_TEST_ENTRIES))
+
+    def test_invalid_location_filter(self):
+        """
+        Invalid location filter passed should return an error and invalid response
+        """
+        response = client.get(f"/{self.endpoint}?location=Младост 1D")
+        self._verify_invalid_endpoint_params(response)
+
+    def test_invalid_source_filter(self):
+        """
+        Invalid source filter passed should return an error and invalid response
+        """
+        response = client.get(f"/{self.endpoint}?source_name=invalid")
+        self._verify_invalid_endpoint_params(response)
+
+    def test_invalid_type_filter(self):
+        """
+        Invalid home_type filter passed should return an error and invalid response
+        """
+        response = client.get(f"/{self.endpoint}?home_type=Dvustaen")
+        self._verify_invalid_endpoint_params(response)
+
+    def test_invalid_size_filter(self):
+        """
+        Invalid home_size filter passed should return an error and invalid response
+        """
+        response = client.get(f"/{self.endpoint}?home_size=big")
+        self._verify_invalid_endpoint_params(response)
+
+    def test_invalid_price_filter(self):
+        """
+        Invalid price filter passed should return an error and invalid response
+        """
+        response = client.get(f"/{self.endpoint}?price=123d")
+        self._verify_invalid_endpoint_params(response)
+
+    def test_all_filters_invalid_location(self):
+        """
+        Invalid location filter passed along with all other all other correct parameters should
+        an return error and an invalid response
+        """
+        other_params = "home_type=Многостаен&price=300000&home_size=70&location=Младост 1D"
+        response = client.get(
+            f"/{self.endpoint}?source_name=bezkomisiona&{other_params}")
+        self._verify_invalid_endpoint_params(response)
+
+
+class TestAllAds(TestNewAds):
+    """
+    Test cases covering the behaviour of the all-ads endpoint
+    Note: The behaviour should be the same as the new-ads endpoint
+    Difference is that summary table will not be shown
+    """
+    @classmethod
+    def setup_class(cls):
+        """
+        setup any state specific to the execution of the given class (which
+        usually contains tests).
+        """
+        cls.endpoint = "all-ads"
+
+    def _verify_endpoint(self, response, expected_listings):
+        """
+        Utility method to perform the needed assertions
+        """
+        ad_list_len = len(response.context['ad_list'])
+        show_summary = response.context['show_summary']
+
+        assert response.is_success
+        assert not show_summary
+        assert ad_list_len == expected_listings
+        with pytest.raises(KeyError):
+            _ = response.context['summary_data']
+
 
 class TestDownloadNewAds:
     """
@@ -328,7 +511,6 @@ id,Свалено от,Цена,Квартал,Големина в кв.м.,Ти
 15,bezkomisiona,280778,Младост 1A,193,Многостаен,https://bezkomisiona.bg/46,some_image,SOME_DATE
 24,bezkomisiona,237987,Люлин 6,72,Многостаен,https://bezkomisiona.bg/29,some_image,SOME_DATE
 """
-
         assert response.text.replace("\r", "").strip() == expected.strip()
 
     def test_type_filter(self):
