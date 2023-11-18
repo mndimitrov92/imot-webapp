@@ -1,7 +1,7 @@
 """
 Module providing testcases for the app endpoints.
 """
-
+# Built in or third party modules
 import os
 import sys
 import pytest
@@ -10,10 +10,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 sys.path.append(os.getcwd())
 
-from db_utils.database import Base
-from utils import create_db_folder
-from app import app, get_db
-import generate_test_db
+# Own imports
+from db_utils.database import Base # pylint: disable=C0413
+from utils import create_db_folder # pylint: disable=C0413
+from app import app, get_db # pylint: disable=C0413
+import generate_test_db # pylint: disable=C0413
 
 
 DATABASE_URL = "sqlite:///./test.db"
