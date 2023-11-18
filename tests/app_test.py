@@ -3,10 +3,12 @@ Module providing testcases for the app endpoints.
 """
 
 import os
+import sys
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+sys.path.append(os.getcwd())
 
 from db_utils.database import Base
 from utils import create_db_folder
